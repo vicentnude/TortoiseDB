@@ -1,3 +1,5 @@
+package src;
+
 import java.io.IOException;
 
 public class Server {
@@ -21,7 +23,7 @@ public class Server {
 
         if (args.length < 1) {
             isArgumentsValid = false;
-            System.err.println("2 arguments needed to start application -u amd -p");
+            System.err.println("2 arguments needed to start application -u and -p");
         } else if (args.length == 1) {
             isArgumentsValid = false;
             checkOneArgument(args[0]);

@@ -1,5 +1,10 @@
+package src;
+
 import java.io.IOException;
+import java.net.Socket;
 import java.net.ServerSocket;
+
+
 
 /**
  * MainThread class it  start the server and waits to clients connections.
@@ -7,9 +12,9 @@ import java.net.ServerSocket;
  * @author Vitor Carvalho and tortoiseDB
  */
 public class MainThread {
-    private ServerSocket socket;
-    private ServerThread applicationHandler;
+    private ServerSocket serverSocket;
     private boolean running;
+    private Socket socket;
 
     /**
      * Constructor of the class
@@ -17,9 +22,8 @@ public class MainThread {
      * @throws IOException error creating the socket.
      */
     public MainThread(int port) throws IOException {
-        this.socket = new ServerSocket(port);
-        this.applicationHandler = new ServerThread(this.socket);
-        this.running = true;
+        this.serverSocket   = new ServerSocket(port);
+        this.running        = true;
     }
 
     public boolean isRunning() {
@@ -34,8 +38,8 @@ public class MainThread {
         while (this.running) {
             System.out.println("Server running...");
             //a new thread
-            Thread thread = new Thread(this.applicationHandler);
-            thread.start();
+            this.socket = serverSocket.accept();
+            new Thread(new ServerThread(this.socket)).start();
         }
     }
 
