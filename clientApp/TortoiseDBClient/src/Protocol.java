@@ -3,7 +3,7 @@ package clientApp.TortoiseDBClient.src;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Protocol {
+    public class Protocol {
     private SocketBuffer socketBuffer;
 
     public Protocol(Socket socket) throws IOException {

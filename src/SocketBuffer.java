@@ -31,6 +31,7 @@ public class SocketBuffer {
         return result.trim();
     }
 
+
     public void write_string(String str) throws IOException {
         int numBytes, lenStr;
         byte bStr[] = new byte[this.STRSIZE];
