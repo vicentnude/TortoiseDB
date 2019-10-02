@@ -1,3 +1,5 @@
+package clientApp.TortoiseDBClient.src;
+
 import java.util.Scanner;
 
 public class TerminalInterface {
