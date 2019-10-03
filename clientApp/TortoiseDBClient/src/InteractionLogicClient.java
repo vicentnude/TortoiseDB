@@ -4,54 +4,57 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class InteractionLogicClient {
+    //All possible client states
+    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, EXIT}
 
     private Protocol protocol;
-    private boolean endconnection;
+    private boolean isRunning;
     private State state;
+    private TerminalInterface terminalInterface;
 
     public InteractionLogicClient(Socket socket) throws IOException{
-        this.protocol = new Protocol(socket);
-        state = State.STRT;
+        this.protocol           = new Protocol(socket);
+        this.state              = State.STRT;
+        this.terminalInterface  = new TerminalInterface();
+        this.isRunning          = true;
     }
 
     public void run() throws IOException {
-        endconnection = false;
         try{
-            while(!endconnection){
+            while(this.isRunning){
                 switch (state){
                     case STRT:
-                        protocol.start();
+                        this.protocol.start();
                         break;
                     case SETT:
-                        protocol.set();
+                        this.protocol.set();
                         break;
                     case GETT:
-                        protocol.get();
+                        this.protocol.get();
                         break;
                     case DELT:
-                        protocol.delete();
+                        this.protocol.delete();
                         break;
                     case UPDT:
-                        protocol.update();
+                        this.protocol.update();
                         break;
                     case EXST:
-                        protocol.exist();
+                        this.protocol.exist();
                         break;
                     case EXIT:
-                        protocol.exit();
-                        endconnection = true;
+                        this.protocol.exit();
+                        this.isRunning = true;
                         break;
 
                 }
             }
         } catch (NullPointerException ex){
-            System.out.println("Lost connection to the server...");
+            this.terminalInterface.printErrorMessage("Unable to execute application!");
+            this.isRunning = false;
         }
     }
 
     public String readServerMessage() throws IOException {
         return protocol.readServerMessage();
     }
-    //All possible client states
-    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, EXIT}
 }
