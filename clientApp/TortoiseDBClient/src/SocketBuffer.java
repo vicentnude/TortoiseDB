@@ -70,21 +70,6 @@ public class SocketBuffer {
     }
 
     public void write_header(String str) throws IOException {
-        int numBytes, lenStr, size = 4;
-        byte bStr[] = new byte[size];
-
-        lenStr = str.length();
-
-        if(lenStr > size)
-            numBytes = size;
-        else
-            numBytes = lenStr;
-
-        for(int i = 0; i < numBytes; i++)
-            bStr[i] = (byte) str.charAt(i);
-
-        // Enviem l'string writeBytes de DataOutputStrem no envia el byte més alt dels chars.
-        dataOutputStream.write(bStr, 0, size);
     }
 
 
