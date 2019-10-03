@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75598f35-e109-4a7f-8256-cb368c587fef" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/InteractionLogicClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/InteractionLogicClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Protocol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/TerminalInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/TerminalInterface.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -58,38 +56,23 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/SocketBuffer.java">
+        <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/TerminalInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-106">
-              <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+            <state relative-caret-position="205">
+              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#1278#1279#0" expanded="true" />
+                <element signature="e#1299#1300#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/InteractionLogicClient.java">
+        <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/TerminalInterface.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="42" column="39" selection-start-line="42" selection-start-column="39" selection-end-line="42" selection-end-column="39" />
-              <folding>
-                <element signature="e#1278#1279#0" expanded="true" />
-                <element signature="e#1299#1300#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="150">
+              <caret line="10" column="40" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -144,7 +127,6 @@
         <option value="$PROJECT_DIR$/src/Server.java" />
         <option value="$PROJECT_DIR$/src/MainThread.java" />
         <option value="$PROJECT_DIR$/src/MyLoggerHandler.java" />
-        <option value="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Client.java" />
         <option value="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Connect.java" />
         <option value="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/ConsoleInteractionClient.java" />
         <option value="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Communication.java" />
@@ -154,8 +136,9 @@
         <option value="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/SocketBuffer.java" />
         <option value="$PROJECT_DIR$/src/SocketBuffer.java" />
         <option value="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Protocol.java" />
-        <option value="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/TerminalInterface.java" />
         <option value="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/InteractionLogicClient.java" />
+        <option value="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/TerminalInterface.java" />
+        <option value="$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Client.java" />
       </list>
     </option>
   </component>
@@ -203,7 +186,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1570116636133" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1570116774733" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
@@ -320,7 +303,7 @@
       <window_info id="simpleUML" order="7" weight="0.32967034" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32827735" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32807216" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -423,13 +406,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/ConsoleInteractionDUMMY.java" />
-    <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Server.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
@@ -507,6 +483,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/InteractionLogicClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/SocketBuffer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-106">
@@ -529,8 +515,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/TerminalInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="42" column="39" selection-start-line="42" selection-start-column="39" selection-end-line="42" selection-end-column="39" />
+        <state relative-caret-position="205">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
           <folding>
             <element signature="e#1278#1279#0" expanded="true" />
             <element signature="e#1299#1300#0" expanded="true" />
@@ -538,13 +524,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/InteractionLogicClient.java">
+    <entry file="file://$PROJECT_DIR$/clientApp/TortoiseDBClient/src/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="150">
+          <caret line="10" column="40" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
         </state>
       </provider>
     </entry>

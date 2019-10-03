@@ -8,7 +8,7 @@ public class Client {
 
     public static void main(String[] args) {
         try {
-            Connect connect     = new Connect(SERVER, PORT);
+            Connect connect             = new Connect(SERVER, PORT);
             Communication communication = new Communication(connect.getSocket());
             communication.startCommunication();
         } catch (IOException exception) {

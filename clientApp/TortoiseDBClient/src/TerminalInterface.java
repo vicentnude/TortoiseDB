@@ -14,7 +14,7 @@ public class TerminalInterface {
         String message  = "User: ";
         this.displayMessage(message); //Todo: change this to saver user
         String user     = askString();
-        message         = "You are now connected to databse " + dataBase + " as user " + user;
+        message         = "You are now connected to database " + dataBase + " as user " + user;
         this.displayMessage(message);
     }
 
