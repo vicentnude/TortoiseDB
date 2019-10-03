@@ -17,40 +17,42 @@ public class InteractionLogicServer {
         connected = true;
         state = State.STRT;
     }
-    public void run() {
-        try {
-            while(connected){
+
+    public void run() throws IOException {
+        endconnection = false;
+        try{
+            while(!endconnection){
                 switch (state){
                     case STRT:
-                        System.out.println("START");
+                        protocol.start();
                         break;
                     case SETT:
-                        System.out.println("SET VALUE TO KEY");
+                        protocol.set();
                         break;
                     case GETT:
-                        System.out.println("GETTING VALUE FROM KEY");
+                        protocol.get();
                         break;
                     case DELT:
-                        System.out.println("DELETING KEY-VALUE");
+                        protocol.delete();
                         break;
                     case UPDT:
-                        System.out.println("UPDATING VALUE FROM KEY");
+                        protocol.update();
                         break;
                     case EXST:
-                        System.out.println("CHECKING EXISTING KEY-VALUE");
+                        protocol.exist();
                         break;
                     case EXIT:
-                        System.out.println("CLOSING CONNECTION");
+                        protocol.exit();
+                        endconnection = true;
                         break;
+
                 }
             }
-        }catch (IndexOutOfBoundsException ex){
-            System.out.println("Connection with client interrupted");
+        } catch (NullPointerException ex){
+            System.out.println("Lost connection to the client...");
         }
     }
 
-
-    //Possible server states
     //Possible server states
     private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT }
 }

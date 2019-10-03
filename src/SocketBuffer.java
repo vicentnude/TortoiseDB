@@ -16,6 +16,10 @@ public class SocketBuffer {
         this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
     }
 
+
+    public void send_function(String function) throws IOException {
+    }
+
     public String read_string() throws IOException {
         String result;
         byte[] bStr;
@@ -63,5 +67,29 @@ public class SocketBuffer {
         }
 
         return bStr;
+    }
+
+    public void write_header(String str) throws IOException {
+        int numBytes, lenStr, size = 4;
+        byte bStr[] = new byte[size];
+
+        lenStr = str.length();
+
+        if(lenStr > size)
+            numBytes = size;
+        else
+            numBytes = lenStr;
+
+        for(int i = 0; i < numBytes; i++)
+            bStr[i] = (byte) str.charAt(i);
+
+        // Enviem l'string writeBytes de DataOutputStrem no envia el byte més alt dels chars.
+        dataOutputStream.write(bStr, 0, size);
+    }
+
+
+    public void write_char(char c) throws IOException {
+        byte bytes = (byte) c;
+        dataOutputStream.write(bytes);
     }
 }

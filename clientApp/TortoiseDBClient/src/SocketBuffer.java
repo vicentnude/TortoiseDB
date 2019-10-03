@@ -19,15 +19,6 @@ public class SocketBuffer {
     }
 
     public void send_function(String function) throws IOException {
-        boolean functionNeedsSpace = !(function.equals("GETT")
-                || function.equals("DELT")
-                || function.equals("UPDT")
-                || function.equals("EXST")
-                || function.equals("EXIT"));
-
-        write_header(function);
-        if(functionNeedsSpace)
-            write_char(' ');
     }
 
     public String read_string() throws IOException {
@@ -99,7 +90,6 @@ public class SocketBuffer {
 
     public void write_char(char c) throws IOException {
         byte bytes = (byte) c;
-
         dataOutputStream.write(bytes);
     }
 }
