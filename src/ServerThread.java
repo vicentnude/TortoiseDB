@@ -11,6 +11,7 @@ public class ServerThread implements Runnable {
     private Protocol protocol;
     private Socket socket;
     private SocketBuffer socketBuffer;
+    private InteractionLogicServer logicServer;
 
     /**
      * Constructor, creates a new protocol object
@@ -20,8 +21,7 @@ public class ServerThread implements Runnable {
     public ServerThread(Socket socket) throws IOException {
         this.map            = new HashMap<>();
         this.socket         = socket;
-        this.socketBuffer   = new SocketBuffer(this.socket);
-        this.protocol       = new Protocol(this.socketBuffer);
+        this.logicServer    = new InteractionLogicServer(socket);
     }
 
     @Override
