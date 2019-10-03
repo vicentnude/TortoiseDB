@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ServerApp.iml" filepath="$PROJECT_DIR$/.idea/ServerApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TortoiseDBClient.iml" filepath="$PROJECT_DIR$/TortoiseDBClient.iml" />
     </modules>
   </component>
 </project>
