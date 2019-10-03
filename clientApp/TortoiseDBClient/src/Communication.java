@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class Communication {
-    private Protocol protocol;
+    private InteractionLogicClient logicClient;
     private String serverMessage;
     private boolean isRunning;
     private TerminalInterface terminalInterface;
 
     public Communication(Socket socket) throws IOException {
-        this.protocol           = new Protocol(socket);
+        this.logicClient        = new InteractionLogicClient(socket);
         this.serverMessage      = "";
         this.isRunning          = true;
         this.terminalInterface  = new TerminalInterface();
@@ -39,8 +39,8 @@ public class Communication {
 
     private void readSocket() throws IOException {
         while (this.isRunning()) {
-            this.serverMessage = this.protocol.readServerMessage();
-
+            logicClient.run();
+            this.serverMessage = this.logicClient.readServerMessage();
             switch (this.serverMessage) {
                 //TODO: put server messages case here!..
             }

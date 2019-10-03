@@ -20,8 +20,7 @@ public class ServerThread implements Runnable {
     public ServerThread(Socket socket) throws IOException {
         this.map            = new HashMap<>();
         this.socket         = socket;
-        this.socketBuffer   = new SocketBuffer(this.socket);
-        this.protocol       = new Protocol(this.socketBuffer);
+        this.protocol       = new Protocol(socket);
     }
 
     @Override

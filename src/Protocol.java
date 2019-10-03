@@ -4,56 +4,58 @@ package src;
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
+import java.util.Scanner;
 
-public class Protocol implements Runnable {
+public class Protocol {
 
     private SocketBuffer socketBuffer;
     private String message;
-    private State state;
+    private Scanner sc;
     private boolean connected;
 
-    public Protocol(SocketBuffer socketBuffer) throws IOException {
-        this.socketBuffer = socketBuffer;
-        //socketBuffer = new SocketBuffer(clientSocket);
-        state = State.STRT;
+    public Protocol(Socket clientSocket) throws IOException {
+        this.socketBuffer = new SocketBuffer(clientSocket);
+        sc = new Scanner(System.in);
         connected = true;
     }
 
-    @Override
-    public void run() {
-        try {
-            while(connected){
-                switch (state){
-                    case STRT:
-                        System.out.println("START");
-                        break;
-                    case SETT:
-                        System.out.println("SET VALUE TO KEY");
-                        break;
-                    case GETT:
-                        System.out.println("GETTING VALUE FROM KEY");
-                        break;
-                    case DELT:
-                        System.out.println("DELETING KEY-VALUE");
-                        break;
-                    case UPDT:
-                        System.out.println("UPDATING VALUE FROM KEY");
-                        break;
-                    case EXST:
-                        System.out.println("CHECKING EXISTING KEY-VALUE");
-                        break;
-                    case EXIT:
-                        System.out.println("CLOSING CONNECTION");
-                        break;
-                }
+
+    public char nextAction() {
+        String readAction;
+
+        System.out.println("\nWhat would you like to do next? (H)it, (B)et, (S)how or Surrende(R)");
+        System.out.print("(or you can write '?' to get info): ");
+
+        readAction = sc.next().toLowerCase();
+
+        while (readAction.length() > 1 || !isCorrectInput(readAction.toLowerCase().charAt(0))) {
+            if(readAction.charAt(0) == '?') {
+                printHelpMessage();
+                System.out.println("\nWhat would you like to do next? (S)et, (G)et, (D)elete, (U)pdate, (E)xist or E(X)it");
+            }else {
+                System.out.println("Incorrect input; write S, G, D, U, E or X (or ?)");
             }
-        }catch (IndexOutOfBoundsException ex){
-            System.out.println("Connection with client interrupted");
+            readAction = sc.next().toLowerCase();
         }
+
+        return readAction.charAt(0);
     }
 
+    private boolean isCorrectInput(char readAction){
+        switch(readAction) {
+            case 'h':
+            case 'b':
+            case 's':
+            case 'r':
+                return true;
+        }
+        return false;
+    }
 
-    //Possible server states
-    //Possible server states
-    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT }
+    private void printHelpMessage() {
+        System.out.println("Hit: ask for an extra card");
+        System.out.println("Bet: double the current bet");
+        System.out.println("Show: show hand to the dealer and stand; this will end the current round");
+        System.out.println("Surrender: retire from this round; this will cause a loss");
+    }
 }
