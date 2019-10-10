@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ServerApp.iml" filepath="$PROJECT_DIR$/.idea/ServerApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent.iml" filepath="$PROJECT_DIR$/parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tortoisedb-client/tortoisedb-client.iml" filepath="$PROJECT_DIR$/tortoisedb-client/tortoisedb-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tortoisedb-server/tortoisedb-server.iml" filepath="$PROJECT_DIR$/tortoisedb-server/tortoisedb-server.iml" />
     </modules>
   </component>
 </project>

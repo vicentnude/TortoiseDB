@@ -1,2 +1,0 @@
-# TortoiseDB
-This is TortoiseDB!
