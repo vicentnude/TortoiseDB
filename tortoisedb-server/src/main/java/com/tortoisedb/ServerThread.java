@@ -1,4 +1,8 @@
-package com.tortoisedb;
+package src;
+
+import com.tortoisedb.InteractionLogicServer;
+import com.tortoisedb.Protocol;
+import com.tortoisedb.SocketBuffer;
 
 import java.io.IOException;
 import java.net.Socket;

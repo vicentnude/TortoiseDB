@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 
 
 
+
 /**
  * MainThread class it  start the server and waits to clients connections.
  *
@@ -39,7 +40,7 @@ public class MainThread {
             System.out.println("Server running...");
             //a new thread
             this.socket = serverSocket.accept();
-            new Thread(new ServerThread(this.socket)).start();
+            new Thread(new src.ServerThread(this.socket)).start();
         }
     }
 
