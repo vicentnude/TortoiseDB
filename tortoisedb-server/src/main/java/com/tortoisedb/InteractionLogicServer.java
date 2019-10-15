@@ -6,23 +6,23 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class InteractionLogicServer {
-
     private BufferedWriter bw;
     private Protocol protocol;
-    private boolean endconnection, connected;
+    private boolean endconnection, running;
     private State state;
+    private MyLoggerHandler loggerHandler;
 
-    public InteractionLogicServer(Socket clientSocket) throws IOException {
-        this.protocol = new Protocol(clientSocket);
-        connected = true;
-        state = State.STRT;
+    public InteractionLogicServer(Socket clientSocket, MyLoggerHandler loggerHandler) throws IOException {
+        this.protocol       = new Protocol(clientSocket);
+        this.running        = true;
+        this.state          = State.STRT;
+        this.loggerHandler  = loggerHandler;
     }
 
     public void run() throws IOException {
-        endconnection = false;
         try{
-            while(!endconnection){
-                switch (state){
+            while(!this.running){
+                switch (this.state){
                     case STRT:
                         protocol.start();
                         break;
@@ -45,11 +45,11 @@ public class InteractionLogicServer {
                         protocol.exit();
                         endconnection = true;
                         break;
-
                 }
             }
         } catch (NullPointerException ex){
             System.out.println("Lost connection to the client...");
+
         }
     }
 
