@@ -40,7 +40,7 @@ public class MainThread {
             System.out.println("Server running...");
             //a new thread
             this.socket = serverSocket.accept();
-            new Thread(new src.ServerThread(this.socket)).start();
+            new Thread(new com.tortoisedb.ServerThread(this.socket)).start();
         }
     }
 

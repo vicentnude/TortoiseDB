@@ -7,7 +7,7 @@ import java.net.Socket;
 
 public class InteractionLogicServer {
     private BufferedWriter bw;
-    private Protocol protocol;
+    public Protocol protocol;
     private boolean endconnection, running;
     private State state;
     private MyLoggerHandler loggerHandler;

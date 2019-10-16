@@ -1,4 +1,4 @@
-package src;
+package com.tortoisedb;
 
 import com.tortoisedb.InteractionLogicServer;
 import com.tortoisedb.Protocol;
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerThread implements Runnable {
 
     private Map<String, String> map;
-    private Protocol protocol;
+    //private Protocol protocol;
     private Socket socket;
     private SocketBuffer socketBuffer;
     private InteractionLogicServer logicServer;
@@ -26,7 +26,7 @@ public class ServerThread implements Runnable {
     public ServerThread(Socket socket) throws IOException {
         this.map            = new ConcurrentHashMap<>();
         this.socket         = socket;
-        this.clientLogger   = new MyLoggerHandler(this.getClass().getName());
+        //this.clientLogger   = new MyLoggerHandler(this.getClass().getName());
         this.logicServer    = new InteractionLogicServer(socket, this.clientLogger);
 
         if(this.checkIfNeedsToReadData()) {
@@ -45,7 +45,7 @@ public class ServerThread implements Runnable {
     @Override
     public void run() {
         try {
-            switch(this.protocol.getCommand()){
+            switch(logicServer.protocol.getCommand()){
                 case "DELT":
                     this.deleteKeyValue();
                     break;
@@ -72,7 +72,7 @@ public class ServerThread implements Runnable {
 
     private void deleteKeyValue() {
         try{
-            deltInHashMap(this.protocol.getKey());
+            deltInHashMap(this.logicServer.protocol.getKey());
         }catch (Exception e) {
             //TODO: send error message saying it cant delete key
         }
@@ -82,12 +82,12 @@ public class ServerThread implements Runnable {
         boolean existKeyValue;
         String key, value;
 
-        key     = this.protocol.getKey();
-        value   = this.protocol.getValue();
+        key     = this.logicServer.protocol.getKey();
+        value   = this.logicServer.protocol.getValue();
 
         try{
             existKeyValue = exstInHashMap(key, value);
-            this.protocol.writeBoolean(existKeyValue);
+            this.logicServer.protocol.writeBoolean(existKeyValue);
         }catch (Exception e) {
             //TODO: send error message saying it cant do it using this key
         }
@@ -96,22 +96,22 @@ public class ServerThread implements Runnable {
     private void getHashMapValue() throws IOException {
         String key, value;
 
-        key = this.protocol.getKey();
+        key = this.logicServer.protocol.getKey();
 
         try{
             value = getInHashMap(key);
-            this.protocol.writeValue(value);
+            this.logicServer.protocol.writeValue(value);
         }catch (Exception e) {
             //TODO: send error message
         }
     }
 
     private void setValueAndKeyInHashMap() throws IOException {
-            String key, value;
+        String key, value;
 
         try {
-            value   = this.protocol.getValue();
-            key     = this.protocol.getKey();
+            value   = this.logicServer.protocol.getValue();
+            key     = this.logicServer.protocol.getKey();
             setInHashMap(key, value);
         }catch (Exception e) {
             //TODO: send error message saying cant save value using key
@@ -122,8 +122,8 @@ public class ServerThread implements Runnable {
         String key, value;
 
         try{
-            value   = this.protocol.getValue();
-            key     = this.protocol.getKey();
+            value   = this.logicServer.protocol.getValue();
+            key     = this.logicServer.protocol.getKey();
             updtInHashMap(key, value);
         }catch (Exception e){
             //TODO: send error message saying that the value cant be updated.
