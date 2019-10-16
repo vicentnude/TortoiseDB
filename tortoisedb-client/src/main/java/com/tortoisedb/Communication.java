@@ -26,6 +26,7 @@ public class Communication {
 
     public void startCommunication() throws IOException {
         this.displayStartMessage();
+        this.logicClient.setUser(terminalInterface.getUser());
         this.readSocket();
     }
 

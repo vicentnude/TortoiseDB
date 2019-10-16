@@ -15,9 +15,18 @@ public class Protocol {
         return this.socketBuffer.read_string();
     }
 
-    public void start() {
+    public void start(String user) {
+        try {
+            socketBuffer.write_command("STRT");
+            socketBuffer.write_space();
+            socketBuffer.write_string(user);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
+    public String getCommand() throws IOException {
+        return this.socketBuffer.read_command();
+    }
     public void set() {
     }
 

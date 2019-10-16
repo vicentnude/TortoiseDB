@@ -45,7 +45,14 @@ public class ServerThread implements Runnable {
     @Override
     public void run() {
         try {
-            switch(logicServer.protocol.getCommand()){
+            String command = logicServer.protocol.getCommand();
+            System.out.println(command);
+            switch(command){
+                case "STRT":
+                    this.logicServer.protocol.readSpace();
+                    String clientUser = logicServer.protocol.readSocket(); //Search if user exists
+                    System.out.println(clientUser);
+                    logicServer.protocol.start();
                 case "DELT":
                     this.deleteKeyValue();
                     break;

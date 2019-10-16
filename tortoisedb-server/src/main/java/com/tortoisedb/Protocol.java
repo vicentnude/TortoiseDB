@@ -18,9 +18,14 @@ public class Protocol {
     }
 
     public String getCommand() throws IOException {
+        return this.socketBuffer.read_command();
+    }
+    public String readSpace() throws IOException {
+        return this.socketBuffer.read_space();
+    }
+    public String readSocket() throws IOException {
         return this.socketBuffer.read_string();
     }
-
     public String getKey() throws IOException {
         return this.socketBuffer.read_string();
     }
@@ -38,6 +43,11 @@ public class Protocol {
     }
 
     public void start() {
+        try {
+            this.socketBuffer.write_command("STRS");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void set() {
