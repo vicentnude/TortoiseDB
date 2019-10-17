@@ -39,14 +39,13 @@ public class Communication {
     }
 
     private void readSocket() throws IOException {
-        while (this.isRunning()) {
             logicClient.run();
+            /*
             this.serverMessage = this.logicClient.readServerMessage();
             switch (this.serverMessage) {
                 //TODO: put server messages case here!..
             }
-
+            */
             this.getClientAction();
-        }
     }
 }

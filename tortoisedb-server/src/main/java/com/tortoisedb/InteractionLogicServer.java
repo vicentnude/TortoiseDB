@@ -25,8 +25,10 @@ public class InteractionLogicServer {
                 switch (this.state){
                     case STRT:
                         protocol.start();
+                        System.out.println("out of strt");
                         break;
                     case SETT:
+                        System.out.println("done");
                         protocol.set();
                         break;
                     case GETT:
@@ -45,7 +47,15 @@ public class InteractionLogicServer {
                         protocol.exit();
                         endconnection = true;
                         break;
+                    case DEFA:
+                        System.out.println("Something went wrong");
+                        break;
                 }
+                state = checkCommand(protocol.getCommand());
+                if(state == null){
+                    state = State.DEFA;
+                }
+                System.out.println(state);
             }
         } catch (NullPointerException ex){
             System.out.println("Lost connection to the client...");
@@ -54,5 +64,13 @@ public class InteractionLogicServer {
     }
 
     //Possible server states
-    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT }
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA }
+
+    public State checkCommand(String command){
+        for(State s:State.values()){
+            if(s.name().equals(command))
+                return s;
+        }
+        return null;
+    }
 }

@@ -35,19 +35,48 @@ public class InteractionLogicClient {
                         this.state = State.EXIT;
                         break;
                     case SETT:
-                        this.protocol.set();
+                        if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
+
+                            this.protocol.set(newCommand.charAt(5),newCommand.substring(7));
+                            System.out.println("Key & Value correctly set.");
+                        }
+                        else{
+                            System.out.println("Expected format:<command><space><char><space><string>");
+                        }
                         break;
                     case GETT:
-                        this.protocol.get();
+                        if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
+                            this.protocol.get(newCommand.charAt(5));
+                        }
+                        else{
+                            System.out.println("Expected format:<command><space><char>");
+                        }
                         break;
                     case DELT:
-                        this.protocol.delete();
+                        if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
+                            this.protocol.delete(newCommand.charAt(5));
+                        }
+                        else{
+                            System.out.println("Expected format:<command><space><char>");
+                        }
                         break;
                     case UPDT:
-                        this.protocol.update();
+                        if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
+
+                            this.protocol.update(newCommand.charAt(5),newCommand.substring(7));
+                            System.out.println("Key & Value correctly updated.");
+                        }
+                        else{
+                            System.out.println("Expected format:<command><space><char><space><string>");
+                        }
                         break;
                     case EXST:
-                        this.protocol.exist();
+                        if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
+                            this.protocol.exist(newCommand.charAt(5));
+                        }
+                        else{
+                            System.out.println("Expected format:<command><space><char>");
+                        }
                         break;
                     case EXIT:
                         this.protocol.exit();
@@ -57,10 +86,16 @@ public class InteractionLogicClient {
                         System.out.println("No existe este comando");
                         break;
                 }
-                newCommand = sc.nextLine();
-                state = checkCommand(newCommand);
-                if(state == null){
-                    state = State.DEFA;
+                if(this.isRunning) {
+                    newCommand = sc.nextLine();
+                    if (newCommand.length() < 4) {
+                        state = null;
+                    } else {
+                        state = checkCommand(newCommand.substring(0, 4));
+                    }
+                    if (state == null) {
+                        state = State.DEFA;
+                    }
                 }
             }
         } catch (NullPointerException ex){

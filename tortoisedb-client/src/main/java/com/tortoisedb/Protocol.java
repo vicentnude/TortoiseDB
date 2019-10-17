@@ -27,21 +27,65 @@ public class Protocol {
     public String getCommand() throws IOException {
         return this.socketBuffer.read_command();
     }
-    public void set() {
+    public void set(char key,String value) {
+        try {
+            socketBuffer.write_command("SETT");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+            socketBuffer.write_space();
+            socketBuffer.write_string(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void get() {
+    public void get(char key) {
+        try {
+            socketBuffer.write_command("GETT");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void delete() {
+    public void delete(char key) {
+        try {
+            socketBuffer.write_command("DELT");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void update() {
+    public void update(char key,String value) {
+        try {
+            socketBuffer.write_command("UPDT");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+            socketBuffer.write_space();
+            socketBuffer.write_string(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void exist() {
+    public void exist(char key) {
+        try {
+            socketBuffer.write_command("EXST");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void exit() {
+        try{
+            socketBuffer.write_command("EXIT");
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

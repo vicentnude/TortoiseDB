@@ -17,6 +17,8 @@ public class ServerThread implements Runnable {
     private SocketBuffer socketBuffer;
     private InteractionLogicServer logicServer;
     private MyLoggerHandler clientLogger;
+    private State state;
+    private boolean isRunning;
 
     /**
      * Constructor, creates a new protocol object
@@ -28,6 +30,8 @@ public class ServerThread implements Runnable {
         this.socket         = socket;
         //this.clientLogger   = new MyLoggerHandler(this.getClass().getName());
         this.logicServer    = new InteractionLogicServer(socket, this.clientLogger);
+        this.state          = State.STRT;
+        isRunning = true;
 
         if(this.checkIfNeedsToReadData()) {
             this.readDataFromFile();
@@ -45,32 +49,41 @@ public class ServerThread implements Runnable {
     @Override
     public void run() {
         try {
-            String command = logicServer.protocol.getCommand();
-            System.out.println(command);
-            switch(command){
-                case "STRT":
-                    this.logicServer.protocol.readSpace();
-                    String clientUser = logicServer.protocol.readSocket(); //Search if user exists
-                    System.out.println(clientUser);
-                    logicServer.protocol.start();
-                case "DELT":
-                    this.deleteKeyValue();
-                    break;
-                case "EXST":
-                    this.checkIfExistKeyvalue();
-                    break;
-                case "GETT":
-                    this.getHashMapValue();
-                    break;
-                case "SETT":
-                    this.setValueAndKeyInHashMap();
-                    break;
-                case "UPDT":
-                    this.updateValueUsingKey();
-                    break;
-                default:
-                    System.out.println("ERROR: COMMAND IS NOT RECOGNISED");
-                    break;
+            while(this.isRunning) {
+                state = checkCommand(logicServer.protocol.getCommand());
+                if (state == null) {
+                    state = State.DEFA;
+                }
+                System.out.println(state);
+                switch (this.state) {
+                    case STRT:
+                        this.readSTRT();
+                        break;
+                    case DELT:
+                        this.deleteKeyValue();
+                        break;
+                    case EXST:
+                        this.checkIfExistKeyvalue();
+                        break;
+                    case GETT:
+                        this.getHashMapValue();
+                        break;
+                    case SETT:
+                        this.setValueAndKeyInHashMap();
+                        break;
+                    case UPDT:
+                        this.updateValueUsingKey();
+                        break;
+                    case EXIT:
+                        this.isRunning = false;
+                        break;
+                    case DEFA:
+                        System.out.println("Something went wrong");
+                        break;
+                    default:
+                        System.out.println("ERROR: COMMAND IS NOT RECOGNISED");
+                        break;
+                }
             }
         } catch (IOException ex) {
             System.err.println("Can't read socketBuffer: " + ex.getMessage());
@@ -79,7 +92,8 @@ public class ServerThread implements Runnable {
 
     private void deleteKeyValue() {
         try{
-            deltInHashMap(this.logicServer.protocol.getKey());
+            this.logicServer.protocol.readSpace();
+            deltInHashMap(this.logicServer.protocol.readSpace());
         }catch (Exception e) {
             //TODO: send error message saying it cant delete key
         }
@@ -89,27 +103,34 @@ public class ServerThread implements Runnable {
         boolean existKeyValue;
         String key, value;
 
-        key     = this.logicServer.protocol.getKey();
-        value   = this.logicServer.protocol.getValue();
+        this.logicServer.protocol.readSpace();
+        key     = this.logicServer.protocol.readSpace();
+        //this.logicServer.protocol.readSpace();
+        //value   = this.logicServer.protocol.getValue();
 
         try{
-            existKeyValue = exstInHashMap(key, value);
-            this.logicServer.protocol.writeBoolean(existKeyValue);
+            existKeyValue = exstInHashMap(key, "notImportant"); //Have to clean code
+            System.out.println(existKeyValue);
+            //this.logicServer.protocol.writeBoolean(existKeyValue);
         }catch (Exception e) {
             //TODO: send error message saying it cant do it using this key
+            //should return if exists
         }
     }
 
     private void getHashMapValue() throws IOException {
         String key, value;
 
-        key = this.logicServer.protocol.getKey();
+        this.logicServer.protocol.readSpace();
+        key = this.logicServer.protocol.readSpace();
 
         try{
             value = getInHashMap(key);
             this.logicServer.protocol.writeValue(value);
+            System.out.println(value);
         }catch (Exception e) {
             //TODO: send error message
+            //should return the value of the key or null if not existed
         }
     }
 
@@ -117,28 +138,35 @@ public class ServerThread implements Runnable {
         String key, value;
 
         try {
-            value   = this.logicServer.protocol.getValue();
-            key     = this.logicServer.protocol.getKey();
+            this.logicServer.protocol.readSpace();
+            key   = this.logicServer.protocol.readSpace();
+            this.logicServer.protocol.readSpace();
+            value     = this.logicServer.protocol.getValue();
             setInHashMap(key, value);
         }catch (Exception e) {
             //TODO: send error message saying cant save value using key
+            //should return if value existed or not. so sett or update
         }
     }
 
     private void updateValueUsingKey() throws IOException {
         String key, value;
-
+        //update not working in the database
         try{
+            this.logicServer.protocol.readSpace();
+            key     = this.logicServer.protocol.readSpace();
+            this.logicServer.protocol.readSpace();
             value   = this.logicServer.protocol.getValue();
-            key     = this.logicServer.protocol.getKey();
             updtInHashMap(key, value);
         }catch (Exception e){
             //TODO: send error message saying that the value cant be updated.
+            //should return if the value got correctly updated
         }
     }
 
     private void deltInHashMap(String k){
         this.map.remove(k);
+        //should return Done or not found to the client
     }
 
     private boolean exstInHashMap(String k, String v){
@@ -156,4 +184,25 @@ public class ServerThread implements Runnable {
     private  void updtInHashMap(String k, String v){
         this.map.replace(k,v);
     }
+
+    public State checkCommand(String command){
+        for(State s:State.values()){
+            if(s.name().equals(command))
+                return s;
+        }
+        return null;
+    }
+
+    private void readSTRT(){
+        try {
+            this.logicServer.protocol.readSpace();
+            String clientUser = logicServer.protocol.readSocket(); //Search if user exists
+            System.out.println("user:" + clientUser);
+            logicServer.protocol.start();
+        }
+        catch (IOException ex) {
+            System.err.println("Can't read socketBuffer: " + ex.getMessage());
+        }
+    }
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA }
 }
