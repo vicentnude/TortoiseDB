@@ -59,11 +59,11 @@ public class Protocol {
         }
     }
 
-    public void delete(String key,String value) {
+    public void delete(String key) {
         try {
             socketBuffer.write_command("ACKN");
             socketBuffer.write_space();
-            socketBuffer.write_string("Key:"+key+" & value:"+value+" correctly deleted.");
+            socketBuffer.write_string("Key:"+key+" correctly deleted.");
         } catch (IOException e) {
             e.printStackTrace();
         }

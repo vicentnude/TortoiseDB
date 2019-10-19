@@ -88,8 +88,11 @@ public class ServerThread implements Runnable {
     //TODO: deleting key and value from de DB
     private void deleteKeyValue() {
         try{
+            String key;
             this.protocol.readSpace();
-            deltInHashMap(this.protocol.readSpace());
+            key = this.protocol.readSpace();
+            deltInHashMap(key);
+            this.protocol.delete(key);
         }catch (Exception e) {
             //TODO: send error message saying it cant delete key
         }

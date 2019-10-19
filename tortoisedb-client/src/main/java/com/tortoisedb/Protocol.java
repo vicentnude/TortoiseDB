@@ -34,17 +34,6 @@ public class Protocol {
             e.printStackTrace();
         }
     }
-    public String read_set() {
-        String output="";
-        try {
-            output+=socketBuffer.read_command();
-            output+=socketBuffer.read_space();
-            output+=socketBuffer.read_string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return output;
-    }
     public void get(char key) {
         try {
             socketBuffer.write_command("GETT");
@@ -54,7 +43,16 @@ public class Protocol {
             e.printStackTrace();
         }
     }
-    public String read_get() {
+    public void delete(char key) {
+        try {
+            socketBuffer.write_command("DELT");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public String read_buffer() {
         String output="";
         try {
             output+=socketBuffer.read_command();
@@ -65,17 +63,6 @@ public class Protocol {
         }
         return output;
     }
-
-    public void delete(char key) {
-        try {
-            socketBuffer.write_command("DELT");
-            socketBuffer.write_space();
-            socketBuffer.write_char(key);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void update(char key,String value) {
         try {
             socketBuffer.write_command("UPDT");
@@ -87,17 +74,6 @@ public class Protocol {
             e.printStackTrace();
         }
     }
-    public String read_update() {
-        String output="";
-        try {
-            output+=socketBuffer.read_command();
-            output+=socketBuffer.read_space();
-            output+=socketBuffer.read_string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return output;
-    }
     public void exist(char key) {
         try {
             socketBuffer.write_command("EXST");
@@ -106,17 +82,6 @@ public class Protocol {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    public String read_exists() {
-        String output="";
-        try {
-            output+=socketBuffer.read_command();
-            output+=socketBuffer.read_space();
-            output+=socketBuffer.read_string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return output;
     }
     public void exit() {
         try{
