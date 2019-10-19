@@ -104,6 +104,14 @@ public class SocketBuffer {
 
         return result.trim();
     }
+    public String read_space() throws IOException{
+        String str;
+        byte bStr[] = new byte[1];
+        bStr = read_bytes(1);
+        char c = (char) bStr[0];
+        str = String.valueOf(c);
+        return str;
+    }
     public void write_space() throws IOException
     {
         String str = " ";

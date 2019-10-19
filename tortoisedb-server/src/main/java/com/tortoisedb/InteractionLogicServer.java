@@ -23,16 +23,17 @@ public class InteractionLogicServer {
         try{
             while(!this.running){
                 switch (this.state){
+                    /*
                     case STRT:
-                        protocol.start();
+                        //protocol.start();
                         System.out.println("out of strt");
                         break;
                     case SETT:
                         System.out.println("done");
-                        protocol.set();
+                        //protocol.set();
                         break;
                     case GETT:
-                        protocol.get();
+                        //protocol.get();
                         break;
                     case DELT:
                         protocol.delete();
@@ -50,6 +51,7 @@ public class InteractionLogicServer {
                     case DEFA:
                         System.out.println("Something went wrong");
                         break;
+                    */
                 }
                 state = checkCommand(protocol.getCommand());
                 if(state == null){

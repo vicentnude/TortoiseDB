@@ -90,6 +90,7 @@ public class ServerThread implements Runnable {
         }
     }
 
+    //TODO: deleting key and value from de DB
     private void deleteKeyValue() {
         try{
             this.logicServer.protocol.readSpace();
@@ -112,6 +113,12 @@ public class ServerThread implements Runnable {
             existKeyValue = exstInHashMap(key, "notImportant"); //Have to clean code
             System.out.println(existKeyValue);
             //this.logicServer.protocol.writeBoolean(existKeyValue);
+
+            String exists = "0";
+            if(existKeyValue){
+                exists = "1";
+            }
+            this.logicServer.protocol.exist(exists);
         }catch (Exception e) {
             //TODO: send error message saying it cant do it using this key
             //should return if exists
@@ -127,7 +134,9 @@ public class ServerThread implements Runnable {
         try{
             value = getInHashMap(key);
             this.logicServer.protocol.writeValue(value);
-            System.out.println(value);
+
+            //if exists
+            this.logicServer.protocol.get(key,value);
         }catch (Exception e) {
             //TODO: send error message
             //should return the value of the key or null if not existed
@@ -143,6 +152,9 @@ public class ServerThread implements Runnable {
             this.logicServer.protocol.readSpace();
             value     = this.logicServer.protocol.getValue();
             setInHashMap(key, value);
+
+            //if work properly
+            this.logicServer.protocol.set(key,value);
         }catch (Exception e) {
             //TODO: send error message saying cant save value using key
             //should return if value existed or not. so sett or update
@@ -158,6 +170,9 @@ public class ServerThread implements Runnable {
             this.logicServer.protocol.readSpace();
             value   = this.logicServer.protocol.getValue();
             updtInHashMap(key, value);
+
+            //if updated
+            this.logicServer.protocol.update(key,value);
         }catch (Exception e){
             //TODO: send error message saying that the value cant be updated.
             //should return if the value got correctly updated

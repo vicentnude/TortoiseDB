@@ -38,7 +38,17 @@ public class Protocol {
             e.printStackTrace();
         }
     }
-
+    public String read_set() {
+        String output="";
+        try {
+            output+=socketBuffer.read_command();
+            output+=socketBuffer.read_space();
+            output+=socketBuffer.read_string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
     public void get(char key) {
         try {
             socketBuffer.write_command("GETT");
@@ -47,6 +57,17 @@ public class Protocol {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public String read_get() {
+        String output="";
+        try {
+            output+=socketBuffer.read_command();
+            output+=socketBuffer.read_space();
+            output+=socketBuffer.read_string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
     }
 
     public void delete(char key) {
@@ -70,7 +91,17 @@ public class Protocol {
             e.printStackTrace();
         }
     }
-
+    public String read_update() {
+        String output="";
+        try {
+            output+=socketBuffer.read_command();
+            output+=socketBuffer.read_space();
+            output+=socketBuffer.read_string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
     public void exist(char key) {
         try {
             socketBuffer.write_command("EXST");
@@ -80,7 +111,17 @@ public class Protocol {
             e.printStackTrace();
         }
     }
-
+    public String read_exists() {
+        String output="";
+        try {
+            output+=socketBuffer.read_command();
+            output+=socketBuffer.read_space();
+            output+=socketBuffer.read_string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
     public void exit() {
         try{
             socketBuffer.write_command("EXIT");

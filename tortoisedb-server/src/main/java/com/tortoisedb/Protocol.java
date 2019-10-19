@@ -50,19 +50,54 @@ public class Protocol {
         }
     }
 
-    public void set() {
+    public void set(String key,String value) {
+        try {
+            socketBuffer.write_command("ACKN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("Key:"+key+" & value:"+value+" correctly sett.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void get() {
+    public void get(String key,String value) {
+        try {
+            socketBuffer.write_command("RETN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("key:"+key+" value:"+value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void delete() {
+    public void delete(String key,String value) {
+        try {
+            socketBuffer.write_command("ACKN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("Key:"+key+" & value:"+value+" correctly deleted.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void update() {
+    public void update(String key,String value) {
+        try {
+            socketBuffer.write_command("ACKN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("Key:"+key+" & value:"+value+" correctly updated.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void exist() {
+    public void exist(String exists) {
+        try {
+            socketBuffer.write_command("EXSA");
+            socketBuffer.write_space();
+            socketBuffer.write_string(exists);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void exit() {

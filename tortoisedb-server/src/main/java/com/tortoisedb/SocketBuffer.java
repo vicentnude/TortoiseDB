@@ -56,6 +56,27 @@ public class SocketBuffer {
 
         return result.trim();
     }
+    public void write_space() throws IOException
+    {
+        String str = " ";
+        int numBytes, lenStr;
+        byte bStr[] = new byte[1];
+
+        lenStr = str.length();
+
+        if (lenStr > 1)
+            numBytes = 1;
+        else
+            numBytes = lenStr;
+
+        for(int i = 0; i < numBytes; i++)
+            bStr[i] = (byte) str.charAt(i);
+
+        for(int i = numBytes; i < 1; i++)
+            bStr[i] = (byte) ' ';
+
+        dataOutputStream.write(bStr, 0, 1);
+    }
     public void write_command(String str) throws IOException {
         int numBytes, lenStr;
         byte[] bStr = new byte[4];

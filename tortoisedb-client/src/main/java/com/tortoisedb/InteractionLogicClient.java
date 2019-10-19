@@ -38,7 +38,7 @@ public class InteractionLogicClient {
                         if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
 
                             this.protocol.set(newCommand.charAt(5),newCommand.substring(7));
-                            System.out.println("Key & Value correctly set.");
+                            System.out.println(this.protocol.read_set());
                         }
                         else{
                             System.out.println("Expected format:<command><space><char><space><string>");
@@ -47,6 +47,7 @@ public class InteractionLogicClient {
                     case GETT:
                         if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
                             this.protocol.get(newCommand.charAt(5));
+                            System.out.println(this.protocol.read_get());
                         }
                         else{
                             System.out.println("Expected format:<command><space><char>");
@@ -64,7 +65,7 @@ public class InteractionLogicClient {
                         if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
 
                             this.protocol.update(newCommand.charAt(5),newCommand.substring(7));
-                            System.out.println("Key & Value correctly updated.");
+                            System.out.println(this.protocol.read_update());
                         }
                         else{
                             System.out.println("Expected format:<command><space><char><space><string>");
@@ -73,6 +74,7 @@ public class InteractionLogicClient {
                     case EXST:
                         if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
                             this.protocol.exist(newCommand.charAt(5));
+                            System.out.println(this.protocol.read_exists());
                         }
                         else{
                             System.out.println("Expected format:<command><space><char>");
