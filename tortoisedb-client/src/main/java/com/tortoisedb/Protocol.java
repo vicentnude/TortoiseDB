@@ -11,10 +11,6 @@ public class Protocol {
         this.socketBuffer = new SocketBuffer(socket);
     }
 
-    public String readServerMessage() throws IOException {
-        return this.socketBuffer.read_string();
-    }
-
     public void start(String user) {
         try {
             socketBuffer.write_command("STRT");

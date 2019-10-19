@@ -23,28 +23,9 @@ public class TerminalInterface {
         System.out.println(messsage);
     }
 
-    public int askInt() {
-        return this.scanner.nextInt();
-    }
+    public String askString() { return scanner.nextLine(); }
 
-    public String askString() {
-        return scanner.nextLine();
-    }
+    public void printErrorMessage(String errorMessage) { System.err.println(errorMessage); }
 
-    public void printHelpMessage() {
-        System.out.println("Set: Set the value");
-        System.out.println("Get: Get the value from a key");
-        System.out.println("Delete: Delete the value from a key");
-        System.out.println("Update: Update a value from a key");
-        System.out.println("Exist: Show if exist a key-value");
-        System.out.println("Exit: Close connection to the database");
-    }
-
-    public void printErrorMessage(String errorMessage) {
-        System.err.println(errorMessage);
-    }
-
-    public String getUser(){
-        return user;
-    }
+    public String getUser(){ return user; }
 }

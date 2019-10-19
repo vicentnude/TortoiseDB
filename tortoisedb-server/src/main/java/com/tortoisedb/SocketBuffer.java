@@ -16,10 +16,6 @@ public class SocketBuffer {
         this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
     }
 
-
-    public void send_function(String function) throws IOException {
-    }
-
     public String read_string() throws IOException {
         String result;
         byte[] bStr;
@@ -130,12 +126,4 @@ public class SocketBuffer {
         return bStr;
     }
 
-    public void write_header(String str) throws IOException {
-    }
-
-
-    public void write_char(char c) throws IOException {
-        byte bytes = (byte) c;
-        dataOutputStream.write(bytes);
-    }
 }

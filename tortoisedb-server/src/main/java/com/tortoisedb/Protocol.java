@@ -9,12 +9,9 @@ import java.util.Scanner;
 public class Protocol {
 
    private SocketBuffer socketBuffer;
-    private String message;
-    private boolean connected;
 
     public Protocol(Socket clientSocket) throws IOException {
         this.socketBuffer = new SocketBuffer(clientSocket);
-        connected = true;
     }
 
     public String getCommand() throws IOException {
@@ -32,14 +29,6 @@ public class Protocol {
 
     public String getValue() throws IOException {
         return this.socketBuffer.read_string();
-    }
-
-    public void writeBoolean(boolean booleanToWrite) throws IOException {
-
-    }
-
-    public void writeValue(String value) throws IOException {
-
     }
 
     public void start() {

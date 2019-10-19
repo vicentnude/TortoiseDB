@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class SocketBuffer {
-    //TODO: read server messages
+
 
     private final int STRSIZE = 40;
 
@@ -16,9 +16,6 @@ public class SocketBuffer {
     public SocketBuffer(Socket socket) throws IOException {
         this.dataInputStream  = new DataInputStream(socket.getInputStream());
         this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
-    }
-
-    public void send_function(String function) throws IOException {
     }
 
     public String read_string() throws IOException {
@@ -149,10 +146,6 @@ public class SocketBuffer {
 
         return bStr;
     }
-
-    public void write_header(String str) throws IOException {
-    }
-
 
     public void write_char(char c) throws IOException {
         byte bytes = (byte) c;

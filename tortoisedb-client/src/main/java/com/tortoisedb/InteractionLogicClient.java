@@ -5,8 +5,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class InteractionLogicClient {
-    //All possible client states
-    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA}
+
+    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, EXIT, DEFA}
 
     private Protocol protocol;
     private boolean isRunning;
@@ -104,10 +104,6 @@ public class InteractionLogicClient {
             this.terminalInterface.printErrorMessage("Unable to execute application!");
             this.isRunning = false;
         }
-    }
-
-    public String readServerMessage() throws IOException {
-        return protocol.readServerMessage();
     }
     public void setUser(String user){
         this.user = user;

@@ -12,8 +12,6 @@ public class ServerThread implements Runnable {
 
     private Map<String, String> map;
     private Protocol protocol;
-    private Socket socket;
-    private SocketBuffer socketBuffer;
     private MyLoggerHandler clientLogger;
     private State state;
     private boolean isRunning;
@@ -25,7 +23,6 @@ public class ServerThread implements Runnable {
      */
     public ServerThread(Socket socket) throws IOException {
         this.map            = new ConcurrentHashMap<>();
-        this.socket         = socket;
         //this.clientLogger   = new MyLoggerHandler(this.getClass().getName());
         this.protocol       = new Protocol(socket);
         this.state          = State.STRT;
@@ -100,17 +97,13 @@ public class ServerThread implements Runnable {
 
     private void checkIfExistKeyvalue() throws IOException {
         boolean existKeyValue;
-        String key, value;
+        String key;
 
         this.protocol.readSpace();
         key     = this.protocol.readSpace();
-        //this.logicServer.protocol.readSpace();
-        //value   = this.logicServer.protocol.getValue();
 
         try{
-            existKeyValue = exstInHashMap(key, "notImportant"); //Have to clean code
-            System.out.println(existKeyValue);
-            //this.logicServer.protocol.writeBoolean(existKeyValue);
+            existKeyValue = exstInHashMap(key);
 
             String exists = "0";
             if(existKeyValue){
@@ -131,7 +124,6 @@ public class ServerThread implements Runnable {
 
         try{
             value = getInHashMap(key);
-            this.protocol.writeValue(value);
 
             //if exists
             this.protocol.get(key,value);
@@ -182,7 +174,7 @@ public class ServerThread implements Runnable {
         //should return Done or not found to the client
     }
 
-    private boolean exstInHashMap(String k, String v){
+    private boolean exstInHashMap(String k){
         return this.map.containsKey(k);//hm.containsValue(v);
     }
 
@@ -209,7 +201,7 @@ public class ServerThread implements Runnable {
     private void readSTRT(){
         try {
             this.protocol.readSpace();
-            String clientUser = this.protocol.readSocket(); //Search if user exists
+            String clientUser = this.protocol.readSocket(); //TODO Search if user exists
             System.out.println("user:" + clientUser);
             this.protocol.start();
         }

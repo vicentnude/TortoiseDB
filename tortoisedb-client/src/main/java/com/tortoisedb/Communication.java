@@ -34,18 +34,7 @@ public class Communication {
         this.terminalInterface.displayStartMessage("TortoiseDB");
     }
 
-    private void getClientAction() throws IOException {
-
-    }
-
     private void readSocket() throws IOException {
             logicClient.run();
-            /*
-            this.serverMessage = this.logicClient.readServerMessage();
-            switch (this.serverMessage) {
-                //TODO: put server messages case here!..
-            }
-            */
-            this.getClientAction();
     }
 }
