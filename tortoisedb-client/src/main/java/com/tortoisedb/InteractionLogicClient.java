@@ -41,7 +41,7 @@ public class InteractionLogicClient {
                             System.out.println(this.protocol.read_buffer());
                         }
                         else{
-                            System.out.println("Expected format:<command><space><char><space><string>");
+                            System.out.println("Expected format:<command><space><char><space><string>"); //temporal
                         }
                         break;
                     case GETT:
@@ -75,18 +75,29 @@ public class InteractionLogicClient {
                     case EXST:
                         if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
                             this.protocol.exist(newCommand.charAt(5));
-                            System.out.println(this.protocol.read_buffer());
+                            String exists = this.protocol.read_buffer();
+                            if(exists.charAt(exists.length()-1) == '1'){
+                                System.out.println("The key exists.");
+                            }
+                            else{
+                                System.out.println("The key does not exists.");
+                            }
                         }
                         else{
                             System.out.println("Expected format:<command><space><char>");
                         }
                         break;
                     case EXIT:
-                        this.protocol.exit();
-                        this.isRunning = false;
+                        if(newCommand.length() == 4) {
+                            this.protocol.exit();
+                            this.isRunning = false;
+                        }
+                        else{
+                            System.out.println("Expected: EXIT");
+                        }
                         break;
                     case DEFA:
-                        System.out.println("No existe este comando");
+                        System.out.println("This command doesn't exist.");
                         break;
                 }
                 if(this.isRunning) {
