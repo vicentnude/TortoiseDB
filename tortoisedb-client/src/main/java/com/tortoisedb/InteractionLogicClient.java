@@ -97,7 +97,7 @@ public class InteractionLogicClient {
                         }
                         break;
                     case DEFA:
-                        System.out.println("ERROR 401: Malformed command.");
+                        System.out.println("ERROR 401: wrong typed command.");
                         break;
                 }
                 if(this.isRunning) {

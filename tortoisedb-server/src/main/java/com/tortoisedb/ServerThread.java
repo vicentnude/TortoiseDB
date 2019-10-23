@@ -64,7 +64,7 @@ public class ServerThread implements Runnable {
                         System.out.println("ERROR 503: Undefined error.");
                         break;
                     default:
-                        System.out.println("ERROR 501: Malformed command.");
+                        System.out.println("ERROR 501: wrong typed command.");
                         break;
                 }
             }

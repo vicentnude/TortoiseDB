@@ -43,7 +43,7 @@ public class Protocol {
         try {
             socketBuffer.write_command("ACKN");
             socketBuffer.write_space();
-            socketBuffer.write_string("Key:"+key+" & value:"+value+" correctly sett.");
+            socketBuffer.write_string("Key:"+key+" & value:"+value+" correctly set.");
         } catch (IOException e) {
             e.printStackTrace();
         }
