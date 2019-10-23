@@ -61,10 +61,10 @@ public class ServerThread implements Runnable {
                         this.socket.close();
                         break;
                     case DEFA:
-                        System.out.println("Something went wrong");
+                        System.out.println("ERROR 503: Undefined error.");
                         break;
                     default:
-                        System.out.println("ERROR: COMMAND IS NOT RECOGNISED");
+                        System.out.println("ERROR 501: Malformed command.");
                         break;
                 }
             }
@@ -119,7 +119,7 @@ public class ServerThread implements Runnable {
                 this.protocol.get(key, value);
             }
             else{
-                this.protocol.error("Key not found. Try SETT "+key+" value");
+                this.protocol.error("ERROR 502: Unexpected command.Key not found. Try SETT "+key+" value");
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -136,7 +136,7 @@ public class ServerThread implements Runnable {
             value     = this.protocol.getValue();
 
             if(exstInHashMap(key)){
-                this.protocol.error("This key already exists. Try UPDT "+key+" "+value);
+                this.protocol.error("ERROR 502: Unexpected command.This key already exists. Try UPDT "+key+" "+value);
             }
             else{
                 setInHashMap(key, value);
@@ -160,7 +160,7 @@ public class ServerThread implements Runnable {
                 this.protocol.update(key, value);
             }
             else{
-                this.protocol.error("Key not found. Try SETT "+key+" "+value);
+                this.protocol.error("ERROR 502: Unexpected command.Key not found. Try SETT "+key+" "+value);
             }
         }catch (Exception e){
             e.printStackTrace();

@@ -41,7 +41,7 @@ public class InteractionLogicClient {
                             System.out.println(this.protocol.read_buffer());
                         }
                         else{
-                            System.out.println("Expected format:<command><space><char><space><string>"); //temporal
+                            System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case GETT:
@@ -50,7 +50,7 @@ public class InteractionLogicClient {
                             System.out.println(this.protocol.read_buffer());
                         }
                         else{
-                            System.out.println("Expected format:<command><space><char>");
+                            System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case DELT:
@@ -59,7 +59,7 @@ public class InteractionLogicClient {
                             System.out.println(this.protocol.read_buffer());
                         }
                         else{
-                            System.out.println("Expected format:<command><space><char>");
+                            System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case UPDT:
@@ -69,7 +69,7 @@ public class InteractionLogicClient {
                             System.out.println(this.protocol.read_buffer());
                         }
                         else{
-                            System.out.println("Expected format:<command><space><char><space><string>");
+                            System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case EXST:
@@ -84,7 +84,7 @@ public class InteractionLogicClient {
                             }
                         }
                         else{
-                            System.out.println("Expected format:<command><space><char>");
+                            System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case EXIT:
@@ -93,11 +93,11 @@ public class InteractionLogicClient {
                             this.isRunning = false;
                         }
                         else{
-                            System.out.println("Expected: EXIT");
+                            System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case DEFA:
-                        System.out.println("This command doesn't exist.");
+                        System.out.println("ERROR 401: Malformed command.");
                         break;
                 }
                 if(this.isRunning) {
@@ -113,7 +113,7 @@ public class InteractionLogicClient {
                 }
             }
         } catch (NullPointerException ex){
-            this.terminalInterface.printErrorMessage("Unable to execute application!");
+            this.terminalInterface.printErrorMessage("ERROR 403: Undefined error.");
             this.isRunning = false;
         }
     }
@@ -121,6 +121,7 @@ public class InteractionLogicClient {
         this.user = user;
     }
     public State checkCommand(String command){
+        command = command.toUpperCase();
         for(State s:State.values()){
             if(s.name().equals(command))
                return s;

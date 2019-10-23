@@ -12,7 +12,7 @@ public class Client {
             Communication communication = new Communication(connect.getSocket());
             communication.startCommunication();
         } catch (IOException exception) {
-            System.err.println("Error connecting to the server " + exception.getMessage());
+            System.err.println("ERROR 403: Undefined error." + exception.getMessage());
         }
     }
 }
