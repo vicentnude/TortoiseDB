@@ -218,10 +218,10 @@ public class ServerThread implements Runnable {
             out.close();
             file.close();
 
-            System.out.println("Object has been serialized");
+            System.out.println(user+"HM.db"+" was created successfully");
 
         } catch (IOException ex) {
-            System.out.println("IOException is caught");
+            System.out.println("Database can't be stored");
         }
     }
 
@@ -236,9 +236,9 @@ public class ServerThread implements Runnable {
 
             in.close();
             file.close();
-
+            System.out.println(user+"HM.db"+" was created successfully");
         } catch (IOException ex) {
-            System.out.println("IOException is caught");
+            System.out.println("Database for current user not found.A new will be created a the end of the session");
         } catch (ClassNotFoundException ex) {
             System.out.println("ClassNotFoundException is caught");
         }
