@@ -1,6 +1,6 @@
 package com.tortoisedb;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,6 +13,7 @@ public class ServerThread implements Runnable {
     private State state;
     private boolean isRunning;
     private Socket socket;
+    private String user;
 
     /**
      * Constructor, creates a new protocol object
@@ -40,6 +41,7 @@ public class ServerThread implements Runnable {
                 switch (this.state) {
                     case STRT:
                         this.readSTRT();
+                        retrieveHashMap();
                         break;
                     case DELT:
                         this.deleteKeyValue();
@@ -58,6 +60,7 @@ public class ServerThread implements Runnable {
                         break;
                     case EXIT:
                         this.isRunning = false;
+                        saveHashMap();
                         this.socket.close();
                         break;
                     case DEFA:
@@ -179,6 +182,7 @@ public class ServerThread implements Runnable {
         try {
             this.protocol.readSpace();
             String clientUser = this.protocol.readSocket(); //TODO Search if user exists
+            user=clientUser;
             System.out.println("user:" + clientUser+" connected");
             this.protocol.start();
         }
@@ -201,4 +205,46 @@ public class ServerThread implements Runnable {
     }
 
     private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA }
+
+    private void saveHashMap() {
+        try {
+            //Saving of object in a file
+            FileOutputStream file = new FileOutputStream(user+"HM.db");
+            ObjectOutputStream out = new ObjectOutputStream(file);
+
+            // Method for serialization of object
+            out.writeObject(this.map);
+
+            out.close();
+            file.close();
+
+            System.out.println("Object has been serialized");
+
+        } catch (IOException ex) {
+            System.out.println("IOException is caught");
+        }
+    }
+
+    private void retrieveHashMap() {
+        try {
+            // Reading the object from a file
+            FileInputStream file = new FileInputStream(user+"HM.db");
+            ObjectInputStream in = new ObjectInputStream(file);
+
+            // Method for deserialization of object
+            this.map = (Map) in.readObject();
+
+            in.close();
+            file.close();
+
+        } catch (IOException ex) {
+            System.out.println("IOException is caught");
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ClassNotFoundException is caught");
+        }
+
+    }
+
+
+
 }
