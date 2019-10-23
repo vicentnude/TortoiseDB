@@ -16,14 +16,6 @@ public class Communication {
         this.terminalInterface  = new TerminalInterface();
     }
 
-    public boolean isRunning() {
-        return isRunning;
-    }
-
-    public void setRunning(boolean running) {
-        isRunning = running;
-    }
-
     public void startCommunication() throws IOException {
         this.displayStartMessage();
         this.logicClient.setUser(terminalInterface.getUser());

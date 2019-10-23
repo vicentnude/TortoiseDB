@@ -36,8 +36,8 @@ public class MainThread {
     }
 
     public void startServer() throws IOException {
+        System.out.println("Server running...");
         while (this.running) {
-            System.out.println("Server running...");
 
             this.socket = serverSocket.accept();
             new Thread(new com.tortoisedb.ServerThread(this.socket)).start();
