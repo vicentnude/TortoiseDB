@@ -135,12 +135,11 @@ public class ServerThread implements Runnable {
         try {
             this.protocol.readSpace();
             key   = this.protocol.readSpace();
+            this.protocol.readSpace();
+            value = this.protocol.getValue();
             if(key.equals(space))
                 this.protocol.error("501 - Malformed command");
             else {
-                this.protocol.readSpace();
-                value = this.protocol.getValue();
-
                 if (exstInHashMap(key)) {
                     this.protocol.error("503 - key already exists. Try UPDT " + key + " " + value);
                 } else {
@@ -158,12 +157,11 @@ public class ServerThread implements Runnable {
         try{
             this.protocol.readSpace();
             key     = this.protocol.readSpace();
+            this.protocol.readSpace();
+            value = this.protocol.getValue();
             if(key.equals(space))
                 this.protocol.error("501 - Malformed command");
             else {
-                this.protocol.readSpace();
-                value = this.protocol.getValue();
-
                 if (exstInHashMap(key)) {
                     updtInHashMap(key, value);
                     this.protocol.update(key, value);
