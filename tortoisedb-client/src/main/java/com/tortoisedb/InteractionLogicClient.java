@@ -105,7 +105,7 @@ public class InteractionLogicClient {
                     if (newCommand.length() < 4) {
                         state = null;
                     } else {
-                        state = checkCommand(newCommand.substring(0, 4));
+                        state = checkCommand(newCommand.substring(0, 4).toUpperCase());
                     }
                     if (state == null) {
                         state = State.DEFA;

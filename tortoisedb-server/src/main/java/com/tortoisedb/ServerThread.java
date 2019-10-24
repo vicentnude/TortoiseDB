@@ -13,6 +13,7 @@ public class ServerThread implements Runnable {
     private State state;
     private boolean isRunning;
     private Socket socket;
+    private String space = " ";
 
     /**
      * Constructor, creates a new protocol object
@@ -64,7 +65,7 @@ public class ServerThread implements Runnable {
                         System.out.println("Something went wrong");
                         break;
                     default:
-                        System.out.println("ERROR: COMMAND IS NOT RECOGNISED");
+                        System.out.println("501 - COMMAND IS NOT RECOGNISED");
                         break;
                 }
             }
@@ -78,12 +79,14 @@ public class ServerThread implements Runnable {
             String key;
             this.protocol.readSpace();
             key = this.protocol.readSpace();
-            if(exstInHashMap(key)) {
+            if(key.equals(space))
+                this.protocol.error("501 - Malformed command");
+            else if(exstInHashMap(key)) {
                 deltInHashMap(key);
                 this.protocol.delete(key);
             }
             else{
-                this.protocol.error("The key is not saved in the Database");
+                this.protocol.error("510 - The key is not saved in the DB");
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -112,14 +115,15 @@ public class ServerThread implements Runnable {
 
         this.protocol.readSpace();
         key = this.protocol.readSpace();
-
         try{
-            if(this.exstInHashMap(key)) {
+            if(key.equals(space))
+                this.protocol.error("501 - Malformed command");
+            else if(this.exstInHashMap(key)) {
                 value = getInHashMap(key);
                 this.protocol.get(key, value);
             }
             else{
-                this.protocol.error("Key not found. Try SETT "+key+" value");
+                this.protocol.error("503 - Key not found. Try SETT "+key+" value");
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -129,18 +133,20 @@ public class ServerThread implements Runnable {
     private void setValueAndKeyInHashMap() throws IOException{
         String key,value;
         try {
-
             this.protocol.readSpace();
             key   = this.protocol.readSpace();
-            this.protocol.readSpace();
-            value     = this.protocol.getValue();
+            if(key.equals(space))
+                this.protocol.error("501 - Malformed command");
+            else {
+                this.protocol.readSpace();
+                value = this.protocol.getValue();
 
-            if(exstInHashMap(key)){
-                this.protocol.error("This key already exists. Try UPDT "+key+" "+value);
-            }
-            else{
-                setInHashMap(key, value);
-                this.protocol.set(key,value);
+                if (exstInHashMap(key)) {
+                    this.protocol.error("503 - key already exists. Try UPDT " + key + " " + value);
+                } else {
+                    setInHashMap(key, value);
+                    this.protocol.set(key, value);
+                }
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -152,15 +158,18 @@ public class ServerThread implements Runnable {
         try{
             this.protocol.readSpace();
             key     = this.protocol.readSpace();
-            this.protocol.readSpace();
-            value   = this.protocol.getValue();
+            if(key.equals(space))
+                this.protocol.error("501 - Malformed command");
+            else {
+                this.protocol.readSpace();
+                value = this.protocol.getValue();
 
-            if(exstInHashMap(key)) {
-                updtInHashMap(key, value);
-                this.protocol.update(key, value);
-            }
-            else{
-                this.protocol.error("Key not found. Try SETT "+key+" "+value);
+                if (exstInHashMap(key)) {
+                    updtInHashMap(key, value);
+                    this.protocol.update(key, value);
+                } else {
+                    this.protocol.error("503 - Key not found. Try SETT " + key + " " + value);
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -200,5 +209,5 @@ public class ServerThread implements Runnable {
         this.map.replace(k,v);
     }
 
-    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA }
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT, DEFA }
 }
