@@ -16,10 +16,6 @@ public class SocketBuffer {
         this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
     }
 
-
-    public void send_function(String function) throws IOException {
-    }
-
     public String read_string() throws IOException {
         String result;
         byte[] bStr;
@@ -34,7 +30,68 @@ public class SocketBuffer {
 
         return result.trim();
     }
+    public String read_space() throws IOException{
+        String str;
+        byte bStr[] = new byte[1];
+        bStr = read_bytes(1);
+        char c = (char) bStr[0];
+        str = String.valueOf(c);
+        return str;
+    }
+    public String read_command() throws IOException {
+        String result;
+        byte[] bStr = new byte[4];
+        char[] cStr = new char[4];
 
+        bStr = read_bytes(4);
+
+        for (int i = 0; i < 4; i++)
+            cStr[i] = (char) bStr[i];
+
+        result = String.valueOf(cStr);
+
+        return result.trim();
+    }
+    public void write_space() throws IOException
+    {
+        String str = " ";
+        int numBytes, lenStr;
+        byte bStr[] = new byte[1];
+
+        lenStr = str.length();
+
+        if (lenStr > 1)
+            numBytes = 1;
+        else
+            numBytes = lenStr;
+
+        for(int i = 0; i < numBytes; i++)
+            bStr[i] = (byte) str.charAt(i);
+
+        for(int i = numBytes; i < 1; i++)
+            bStr[i] = (byte) ' ';
+
+        dataOutputStream.write(bStr, 0, 1);
+    }
+    public void write_command(String str) throws IOException {
+        int numBytes, lenStr;
+        byte[] bStr = new byte[4];
+
+        lenStr = str.length();
+
+        if (lenStr > 4)
+            numBytes = 4;
+        else
+            numBytes = lenStr;
+
+        for (int i = 0; i < numBytes; i++)
+            bStr[i] = (byte) str.charAt(i);
+
+        for (int i = numBytes; i < 4; i++)
+            bStr[i] = (byte) ' ';
+
+        dataOutputStream.write(bStr, 0, 4);
+    }
 
     public void write_string(String str) throws IOException {
         int numBytes, lenStr;
@@ -69,12 +126,4 @@ public class SocketBuffer {
         return bStr;
     }
 
-    public void write_header(String str) throws IOException {
-    }
-
-
-    public void write_char(char c) throws IOException {
-        byte bytes = (byte) c;
-        dataOutputStream.write(bytes);
-    }
 }

@@ -1,23 +1,19 @@
-package src;
+package com.tortoisedb;
 
-import com.tortoisedb.InteractionLogicServer;
-import com.tortoisedb.Protocol;
-import com.tortoisedb.SocketBuffer;
-
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.Scanner;
 
 public class ServerThread implements Runnable {
 
-    private Map<String, String> hm;
+    private Map<String, String> map;
     private Protocol protocol;
+    private MyLoggerHandler clientLogger;
+    private State state;
+    private boolean isRunning;
     private Socket socket;
-    private SocketBuffer socketBuffer;
-    private InteractionLogicServer logicServer;
+    private String user;
 
     /**
      * Constructor, creates a new protocol object
@@ -25,105 +21,230 @@ public class ServerThread implements Runnable {
      * @throws IOException error creating the socket.
      */
     public ServerThread(Socket socket) throws IOException {
-        this.hm            = new ConcurrentHashMap<String, String>();
+        this.map            = new ConcurrentHashMap<>();
+        //this.clientLogger   = new MyLoggerHandler(this.getClass().getName());
+        this.protocol       = new Protocol(socket);
+        this.state          = State.STRT;
         this.socket         = socket;
-        this.logicServer    = new InteractionLogicServer(socket);
+        isRunning = true;
     }
 
-    /**
-     * --------------------------------------------------------------------------------------------------------
-     */
-    public void loop() {
-
-        System.out.println("Welcome to Toroise DB");
-        run();
-        System.out.println("SYSTEM WILL SHUTDOWN, HAVE A NICE DAY");
-    }
-    public  void run(){
-        Scanner sc=new Scanner(System.in);
-        String option=" ";
-        while(!option.contains("EXIT")){
-            System.out.print("TortoiseDB: ");
-            option=sc.nextLine();
-            try{
-                menu(option);
-            } catch (Exception e){
-                if (!option.contains("EXIT")){
-                    System.out.println("ERROR: COMMAND HAS NOT REQUIRED NUMBER OF OPERATORS");
+    @Override
+    public void run() {
+        try {
+            while(this.isRunning) {
+                state = checkCommand(protocol.getCommand());
+                if (state == null) {
+                    state = State.DEFA;
+                }
+                System.out.println(state); //temporal
+                switch (this.state) {
+                    case STRT:
+                        this.readSTRT();
+                        retrieveHashMap();
+                        break;
+                    case DELT:
+                        this.deleteKeyValue();
+                        break;
+                    case EXST:
+                        this.checkIfExistKeyvalue();
+                        break;
+                    case GETT:
+                        this.getHashMapValue();
+                        break;
+                    case SETT:
+                        this.setValueAndKeyInHashMap();
+                        break;
+                    case UPDT:
+                        this.updateValueUsingKey();
+                        break;
+                    case EXIT:
+                        this.isRunning = false;
+                        saveHashMap();
+                        this.socket.close();
+                        break;
+                    case DEFA:
+                        System.out.println("ERROR 503: Undefined error.");
+                        break;
+                    default:
+                        System.out.println("ERROR 501: wrong typed command.");
+                        break;
                 }
             }
+        } catch (IOException ex) {
+            System.err.println("Can't read socketBuffer: " + ex.getMessage());
+        }
+    }
 
+    private void deleteKeyValue() {
+        try{
+            String key;
+            this.protocol.readSpace();
+            key = this.protocol.readSpace();
+            if(exstInHashMap(key)) {
+                deltInHashMap(key);
+                this.protocol.delete(key);
+            }
+            else{
+                this.protocol.error("The key is not saved in the Database");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkIfExistKeyvalue() throws IOException {
+        String key;
+
+        this.protocol.readSpace();
+        key     = this.protocol.readSpace();
+
+        try{
+            String exists = "0";
+            if(exstInHashMap(key)){
+                exists = "1";
+            }
+            this.protocol.exist(exists);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getHashMapValue() throws IOException {
+        String key, value;
+
+        this.protocol.readSpace();
+        key = this.protocol.readSpace();
+
+        try{
+            if(this.exstInHashMap(key)) {
+                value = getInHashMap(key);
+                this.protocol.get(key, value);
+            }
+            else{
+                this.protocol.error("ERROR 502: Unexpected command.Key not found. Try SETT "+key+" value");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setValueAndKeyInHashMap() throws IOException{
+        String key,value;
+        try {
+
+            this.protocol.readSpace();
+            key   = this.protocol.readSpace();
+            this.protocol.readSpace();
+            value     = this.protocol.getValue();
+
+            if(exstInHashMap(key)){
+                this.protocol.error("ERROR 502: Unexpected command.This key already exists. Try UPDT "+key+" "+value);
+            }
+            else{
+                setInHashMap(key, value);
+                this.protocol.set(key,value);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateValueUsingKey() throws IOException{
+        String key, value;
+        try{
+            this.protocol.readSpace();
+            key     = this.protocol.readSpace();
+            this.protocol.readSpace();
+            value   = this.protocol.getValue();
+
+            if(exstInHashMap(key)) {
+                updtInHashMap(key, value);
+                this.protocol.update(key, value);
+            }
+            else{
+                this.protocol.error("ERROR 502: Unexpected command.Key not found. Try SETT "+key+" "+value);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private State checkCommand(String command){
+        for(State s:State.values()){
+            if(s.name().equals(command))
+                return s;
+        }
+        return null;
+    }
+
+    private void readSTRT() throws IOException{
+        try {
+            this.protocol.readSpace();
+            String clientUser = this.protocol.readSocket(); //TODO Search if user exists
+            user=clientUser;
+            System.out.println("user:" + clientUser+" connected");
+            this.protocol.start();
+        }
+        catch (IOException ex) {
+            System.err.println("Can't read socketBuffer: " + ex.getMessage());
+        }
+    }
+    private void deltInHashMap(String k){ this.map.remove(k); }
+
+    private boolean exstInHashMap(String k){ return this.map.containsKey(k); }
+
+    private String getInHashMap(String k){ return this.map.get(k); }
+
+    private void setInHashMap(String k, String v){
+        this.map.put(k,v);
+    }
+
+    private  void updtInHashMap(String k, String v){
+        this.map.replace(k,v);
+    }
+
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA }
+
+    private void saveHashMap() {
+        try {
+            //Saving of object in a file
+            FileOutputStream file = new FileOutputStream(user+"HM.db");
+            ObjectOutputStream out = new ObjectOutputStream(file);
+
+            // Method for serialization of object
+            out.writeObject(this.map);
+
+            out.close();
+            file.close();
+
+            System.out.println(user+"HM.db"+" was created successfully");
+
+        } catch (IOException ex) {
+            System.out.println("Database can't be stored");
+        }
+    }
+
+    private void retrieveHashMap() {
+        try {
+            // Reading the object from a file
+            FileInputStream file = new FileInputStream(user+"HM.db");
+            ObjectInputStream in = new ObjectInputStream(file);
+
+            // Method for deserialization of object
+            this.map = (Map) in.readObject();
+
+            in.close();
+            file.close();
+            System.out.println(user+"HM.db"+" was created successfully");
+        } catch (IOException ex) {
+            System.out.println("Database for current user not found.A new will be created a the end of the session");
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ClassNotFoundException is caught");
         }
 
     }
-    public void menu(String option){
-        String command=option.split("\\s+")[0];
-        String k=option.split("\\s+")[1];
-        String v="";
-        System.out.println(command);
-        switch(command){
-            case "DELT":
-                try{
-                    deltInHashMap(k);
-                }catch (Exception e){
-                    System.out.println(" ERROR: KEY NOT FOUND ");
-                }
-                break;
-            case "EXST":
-                try{
-                    v=option.split("\\s+")[2];
-                    System.out.println(exstInHashMap(k,v));
-                }catch (Exception e){
-                    System.out.println(" ERROR: KEY & VALUE REQUIRED  ");
-                }
-                break;
-            case "GETT":
 
-                try{
-                    System.out.println(getInHashMap(k));
-                }catch (Exception e){
-                    System.out.println(" ERROR: KEY NOT FOUND ");
-                }
-                break;
-            case "SETT":
-                try{
-                    v=option.split("\\s+")[2];
-                    setInHashMap(k,v);
-                }catch (Exception e){
-                    System.out.println(" ERROR: KEY & VALUE REQUIRED  ");
-                }
-                break;
-            case "UPDT":
-                try{
-                    v=option.split("\\s+")[2];
-                    updtInHashMap(k,v);
-                }catch (Exception e){
-                    System.out.println(" ERROR: KEY & VALUE REQUIRED ");
-                }
-                break;
-            default:
-                System.out.println("ERROR: COMMAND IS NOT RECOGNISED");
-                break;
-        }
-    }
-    public  void deltInHashMap(String k){
-        hm.remove(k);
-    }
-    public  boolean exstInHashMap(String k, String v){
-        return hm.containsKey(k);//hm.containsValue(v);
-    }
-    public  String getInHashMap(String k){
-        return hm.get(k).toString();
-    }
-    public  void setInHashMap(String k, String v){
-        hm.put(k,v);
-    }
-    public  void updtInHashMap(String k, String v){
-        hm.replace(k,v);
 
-    }
 
-    /**
-     * --------------------------------------------------------------------------------------------------------
-     */
 }
