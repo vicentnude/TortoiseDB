@@ -10,11 +10,10 @@ public class TerminalInterface {
         this.scanner = new Scanner(System.in);
     }
 
-
     public void displayStartMessage(String dataBase) {
         String message  = "User: ";
         this.displayMessage(message); //Todo: change this to saver user
-        user     = askString();
+        user            = askString();
         message         = "You are now connected to database " + dataBase + " as user " + user;
         this.displayMessage(message);
     }

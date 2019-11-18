@@ -27,6 +27,6 @@ public class Communication {
     }
 
     private void readSocket() throws IOException {
-            logicClient.run();
+        logicClient.run();
     }
 }
