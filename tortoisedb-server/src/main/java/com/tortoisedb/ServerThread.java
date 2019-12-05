@@ -15,6 +15,9 @@ public class ServerThread implements Runnable {
     private Socket socket;
     private String user;
 
+    private int counter;
+    private int interval;
+
     /**
      * Constructor, creates a new protocol object
      * @param socket the socket used in the communication
@@ -26,6 +29,10 @@ public class ServerThread implements Runnable {
         this.protocol       = new Protocol(socket);
         this.state          = State.STRT;
         this.socket         = socket;
+
+        this.counter = 0;
+        this.interval = 10;
+
         isRunning = true;
     }
 
@@ -33,6 +40,7 @@ public class ServerThread implements Runnable {
     public void run() {
         try {
             while(this.isRunning) {
+                counter();
                 state = checkCommand(protocol.getCommand());
                 if (state == null) {
                     state = State.DEFA;
@@ -60,7 +68,7 @@ public class ServerThread implements Runnable {
                         break;
                     case EXIT:
                         this.isRunning = false;
-                        saveHashMap();
+                        //saveHashMap();
                         this.socket.close();
                         break;
                     case DEFA:
@@ -245,6 +253,11 @@ public class ServerThread implements Runnable {
 
     }
 
+    private void counter(){
+        counter = (counter+1) % interval;
+        if (counter <= 0)
+            this.saveHashMap();
+    }
 
 
 }
