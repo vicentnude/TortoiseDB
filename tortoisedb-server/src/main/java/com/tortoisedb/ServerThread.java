@@ -58,10 +58,10 @@ public class ServerThread implements Runnable {
                         this.checkIfExistKeyvalue();
                         break;
                     case INCR:
-                        this.getHashMapValue();
+                        this.incrValue();
                         break;
                     case INCRBY:
-                        this.getHashMapValue();
+                        this.incrValuebyKey();
                         break;
                     case GETT:
                         this.getHashMapValue();
@@ -89,14 +89,14 @@ public class ServerThread implements Runnable {
             System.err.println("Can't read socketBuffer: " + ex.getMessage());
         }
     }
-    private void IncrValuebyKey() {
+    private void incrValue() {
         try{
             String key;
             this.protocol.readSpace();
             key = this.protocol.readSpace();
             if(exstInHashMap(key)) {
                 incrInHashMap(key);
-                this.protocol.delete(key);
+
             }
             else{
                 this.protocol.error("The key is not saved in the Database");
@@ -105,7 +105,7 @@ public class ServerThread implements Runnable {
             e.printStackTrace();
         }
     }
-    private void IncrByValuebyKey() {
+    private void incrValuebyKey() {
         try{
             String key,increment;
             this.protocol.readSpace();
@@ -113,7 +113,7 @@ public class ServerThread implements Runnable {
             increment = this.protocol.readSpace();
             if(exstInHashMap(key)) {
                 incrByInHashMap(key,Integer.parseInt(increment));
-                this.protocol.delete(key);
+
             }
             else{
                 this.protocol.error("The key is not saved in the Database");
