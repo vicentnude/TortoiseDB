@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class InteractionLogicClient {
 
-    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, EXIT, DEFA}
+    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, EXIT, DEFA,INCR,DECR,INBY}
 
     private Protocol protocol;
     private boolean isRunning;
@@ -45,6 +45,34 @@ public class InteractionLogicClient {
                         }
                         break;
                     case GETT:
+                        if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
+                            this.protocol.get(newCommand.charAt(5));
+                            System.out.println(this.protocol.read_buffer());
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case INBY:
+                        if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
+
+                            this.protocol.set(newCommand.charAt(5),newCommand.substring(7));
+                            System.out.println(this.protocol.read_buffer());
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case INCR:
+                        if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
+                            this.protocol.get(newCommand.charAt(5));
+                            System.out.println(this.protocol.read_buffer());
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case DECR:
                         if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
                             this.protocol.get(newCommand.charAt(5));
                             System.out.println(this.protocol.read_buffer());

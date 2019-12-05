@@ -58,6 +58,33 @@ public class Protocol {
             e.printStackTrace();
         }
     }
+    public void increment(String key,String value) {
+        try {
+            socketBuffer.write_command("RETN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("key:"+key+" value:"+value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void incrementBy(String key,String value) {
+        try {
+            socketBuffer.write_command("RETN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("key:"+key+" value:"+value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void decrement(String key,String value) {
+        try {
+            socketBuffer.write_command("RETN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("key:"+key+" value:"+value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void delete(String key) {
         try {
