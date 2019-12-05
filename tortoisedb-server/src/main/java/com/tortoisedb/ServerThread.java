@@ -60,7 +60,7 @@ public class ServerThread implements Runnable {
                     case INCR:
                         this.incrValue();
                         break;
-                    case INCRBY:
+                    case INBY:
                         this.incrValuebyKey();
                         break;
                     case DECR:
@@ -274,7 +274,7 @@ public class ServerThread implements Runnable {
         this.map.replace(k,v);
     }
 
-    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA,INCR,INCRBY,DECR }
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA,INCR,INBY,DECR }
 
     private void saveHashMap() {
         try {
