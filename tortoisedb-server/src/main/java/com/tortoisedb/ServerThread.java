@@ -57,6 +57,12 @@ public class ServerThread implements Runnable {
                     case EXST:
                         this.checkIfExistKeyvalue();
                         break;
+                    case INCR:
+                        this.getHashMapValue();
+                        break;
+                    case INCRBY:
+                        this.getHashMapValue();
+                        break;
                     case GETT:
                         this.getHashMapValue();
                         break;
@@ -81,6 +87,39 @@ public class ServerThread implements Runnable {
             }
         } catch (IOException ex) {
             System.err.println("Can't read socketBuffer: " + ex.getMessage());
+        }
+    }
+    private void IncrValuebyKey() {
+        try{
+            String key;
+            this.protocol.readSpace();
+            key = this.protocol.readSpace();
+            if(exstInHashMap(key)) {
+                incrInHashMap(key);
+                this.protocol.delete(key);
+            }
+            else{
+                this.protocol.error("The key is not saved in the Database");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void IncrByValuebyKey() {
+        try{
+            String key,increment;
+            this.protocol.readSpace();
+            key = this.protocol.readSpace();
+            increment = this.protocol.readSpace();
+            if(exstInHashMap(key)) {
+                incrByInHashMap(key,Integer.parseInt(increment));
+                this.protocol.delete(key);
+            }
+            else{
+                this.protocol.error("The key is not saved in the Database");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -203,6 +242,9 @@ public class ServerThread implements Runnable {
     private boolean exstInHashMap(String k){ return this.map.containsKey(k); }
 
     private String getInHashMap(String k){ return this.map.get(k); }
+    private void incrInHashMap(String k){ this.map.put(k,this.map.get(k)+1); }
+
+    private void incrByInHashMap(String k, int i){ this.map.put(k,this.map.get(k)+i); }
 
     private void setInHashMap(String k, String v){
         this.map.put(k,v);
@@ -212,7 +254,7 @@ public class ServerThread implements Runnable {
         this.map.replace(k,v);
     }
 
-    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA }
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA,INCR,INCRBY }
 
     private void saveHashMap() {
         try {
