@@ -23,31 +23,31 @@ public class Protocol {
     public String getCommand() throws IOException {
         return this.socketBuffer.read_command();
     }
-    public void set(char key,String value) {
+    public void set(String key,String value) {
         try {
             socketBuffer.write_command("SETT");
             socketBuffer.write_space();
-            socketBuffer.write_char(key);
+            socketBuffer.write_string(key);
             socketBuffer.write_space();
             socketBuffer.write_string(value);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void get(char key) {
+    public void get(String key) {
         try {
             socketBuffer.write_command("GETT");
             socketBuffer.write_space();
-            socketBuffer.write_char(key);
+            socketBuffer.write_string(key);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void delete(char key) {
+    public void delete(String key) {
         try {
             socketBuffer.write_command("DELT");
             socketBuffer.write_space();
-            socketBuffer.write_char(key);
+            socketBuffer.write_string(key);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,22 +63,22 @@ public class Protocol {
         }
         return output;
     }
-    public void update(char key,String value) {
+    public void update(String key,String value) {
         try {
             socketBuffer.write_command("UPDT");
             socketBuffer.write_space();
-            socketBuffer.write_char(key);
+            socketBuffer.write_string(key);
             socketBuffer.write_space();
             socketBuffer.write_string(value);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void exist(char key) {
+    public void exist(String key) {
         try {
             socketBuffer.write_command("EXST");
             socketBuffer.write_space();
-            socketBuffer.write_char(key);
+            socketBuffer.write_string(key);
         } catch (IOException e) {
             e.printStackTrace();
         }

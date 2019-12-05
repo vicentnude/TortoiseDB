@@ -26,6 +26,7 @@ public class InteractionLogicClient {
     }
 
     public void run() throws IOException {
+        int position;
         try{
             while(this.isRunning){
                 switch (state){
@@ -35,52 +36,102 @@ public class InteractionLogicClient {
                         this.state = State.EXIT;
                         break;
                     case SETT:
-                        if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
-
-                            this.protocol.set(newCommand.charAt(5),newCommand.substring(7));
-                            System.out.println(this.protocol.read_buffer());
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1){
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.set(key, value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
                         }
                         else{
                             System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case GETT:
-                        if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
-                            this.protocol.get(newCommand.charAt(5));
-                            System.out.println(this.protocol.read_buffer());
+                        position = newCommand.indexOf(" ");
+                        if(position == 4) {
+                            String key = newCommand.substring(position+1,newCommand.length());
+                            if(key.length() >= 40 ){
+                                System.out.println("The key are too long.");
+                            }
+                            else {
+                                this.protocol.get(key);
+                                System.out.println(this.protocol.read_buffer());
+                            }
                         }
                         else{
                             System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case DELT:
-                        if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
-                            this.protocol.delete(newCommand.charAt(5));
-                            System.out.println(this.protocol.read_buffer());
+                        position = newCommand.indexOf(" ");
+                        if(position == 4) {
+                            String key = newCommand.substring(position+1,newCommand.length());
+                            if(key.length() >= 40){
+                                System.out.println("The key/value are too long.");
+                            }
+                            else {
+                                this.protocol.delete(key);
+                                System.out.println(this.protocol.read_buffer());
+                            }
+
                         }
                         else{
                             System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case UPDT:
-                        if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
-
-                            this.protocol.update(newCommand.charAt(5),newCommand.substring(7));
-                            System.out.println(this.protocol.read_buffer());
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1) {
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.update(key,value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
                         }
                         else{
                             System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case EXST:
-                        if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
-                            this.protocol.exist(newCommand.charAt(5));
-                            String exists = this.protocol.read_buffer();
-                            if(exists.charAt(exists.length()-1) == '1'){
-                                System.out.println("The key exists.");
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            String key = newCommand.substring(position+1,newCommand.length());
+                            if(key.length() >= 40){
+                                System.out.println("The key/value are too long.");
                             }
-                            else{
-                                System.out.println("The key does not exists.");
+                            else {
+                                this.protocol.exist(key);
+                                String exists = this.protocol.read_buffer();
+                                if(exists.charAt(exists.length()-1) == '1'){
+                                    System.out.println("The key exists.");
+                                }
+                                else{
+                                    System.out.println("The key does not exists.");
+                                }
                             }
                         }
                         else{

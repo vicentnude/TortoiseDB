@@ -45,7 +45,6 @@ public class ServerThread implements Runnable {
                 if (state == null) {
                     state = State.DEFA;
                 }
-                System.out.println(state); //temporal
                 switch (this.state) {
                     case STRT:
                         this.readSTRT();
@@ -68,7 +67,7 @@ public class ServerThread implements Runnable {
                         break;
                     case EXIT:
                         this.isRunning = false;
-                        //saveHashMap();
+                        saveHashMap();
                         this.socket.close();
                         break;
                     case DEFA:
@@ -88,7 +87,7 @@ public class ServerThread implements Runnable {
         try{
             String key;
             this.protocol.readSpace();
-            key = this.protocol.readSpace();
+            key = this.protocol.getValue();
             if(exstInHashMap(key)) {
                 deltInHashMap(key);
                 this.protocol.delete(key);
@@ -105,7 +104,7 @@ public class ServerThread implements Runnable {
         String key;
 
         this.protocol.readSpace();
-        key     = this.protocol.readSpace();
+        key     = this.protocol.getValue();
 
         try{
             String exists = "0";
@@ -122,7 +121,7 @@ public class ServerThread implements Runnable {
         String key, value;
 
         this.protocol.readSpace();
-        key = this.protocol.readSpace();
+        key = this.protocol.getValue();
 
         try{
             if(this.exstInHashMap(key)) {
@@ -130,7 +129,7 @@ public class ServerThread implements Runnable {
                 this.protocol.get(key, value);
             }
             else{
-                this.protocol.error("ERROR 502: Unexpected command.Key not found. Try SETT "+key+" value");
+                this.protocol.error("Key not found.");
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -140,14 +139,13 @@ public class ServerThread implements Runnable {
     private void setValueAndKeyInHashMap() throws IOException{
         String key,value;
         try {
-
             this.protocol.readSpace();
-            key   = this.protocol.readSpace();
+            key   = this.protocol.getValue();
             this.protocol.readSpace();
             value     = this.protocol.getValue();
 
             if(exstInHashMap(key)){
-                this.protocol.error("ERROR 502: Unexpected command.This key already exists. Try UPDT "+key+" "+value);
+                this.protocol.error("This key already exists.");
             }
             else{
                 setInHashMap(key, value);
@@ -162,7 +160,7 @@ public class ServerThread implements Runnable {
         String key, value;
         try{
             this.protocol.readSpace();
-            key     = this.protocol.readSpace();
+            key     = this.protocol.getValue();
             this.protocol.readSpace();
             value   = this.protocol.getValue();
 
@@ -171,7 +169,7 @@ public class ServerThread implements Runnable {
                 this.protocol.update(key, value);
             }
             else{
-                this.protocol.error("ERROR 502: Unexpected command.Key not found. Try SETT "+key+" "+value);
+                this.protocol.error("Key not found.");
             }
         }catch (Exception e){
             e.printStackTrace();
