@@ -56,7 +56,7 @@ public class InteractionLogicClient {
                     case INBY:
                         if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
 
-                            this.protocol.set(newCommand.charAt(5),newCommand.substring(7));
+                            this.protocol.incrementBy(newCommand.charAt(5),newCommand.substring(7));
                             System.out.println(this.protocol.read_buffer());
                         }
                         else{
@@ -65,7 +65,7 @@ public class InteractionLogicClient {
                         break;
                     case INCR:
                         if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
-                            this.protocol.get(newCommand.charAt(5));
+                            this.protocol.increment(newCommand.charAt(5));
                             System.out.println(this.protocol.read_buffer());
                         }
                         else{
@@ -74,7 +74,7 @@ public class InteractionLogicClient {
                         break;
                     case DECR:
                         if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
-                            this.protocol.get(newCommand.charAt(5));
+                            this.protocol.decrement(newCommand.charAt(5));
                             System.out.println(this.protocol.read_buffer());
                         }
                         else{

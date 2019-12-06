@@ -98,7 +98,12 @@ public class ServerThread implements Runnable {
             this.protocol.readSpace();
             key = this.protocol.readSpace();
             if(exstInHashMap(key)) {
-                incrByInHashMap(key,1);
+
+                int res=Integer.parseInt("1")+Integer.parseInt(getInHashMap(key));
+
+                setInHashMap(key,String.valueOf(res));
+
+                this.protocol.set(key,String.valueOf(res));
 
             }
             else{
@@ -113,9 +118,15 @@ public class ServerThread implements Runnable {
             String key,increment;
             this.protocol.readSpace();
             key = this.protocol.readSpace();
-            increment = this.protocol.readSpace();
+            increment=this.protocol.readSpace();
+            System.out.println("print:"+increment);
             if(exstInHashMap(key)) {
-                incrByInHashMap(key,Integer.parseInt(increment));
+
+                //int res=Integer.parseInt(increment)+Integer.parseInt(getInHashMap(key));
+
+                //setInHashMap(key,String.valueOf(res));
+
+                //this.protocol.set(key,String.valueOf(res));
 
             }
             else{
@@ -127,12 +138,16 @@ public class ServerThread implements Runnable {
     }
     private void decrKeyValue() {
         try{
-            String key,increment;
+            String key;
             this.protocol.readSpace();
             key = this.protocol.readSpace();
-            increment = this.protocol.readSpace();
             if(exstInHashMap(key)) {
-                incrByInHashMap(key,-1);
+
+                int res=Integer.parseInt("-1")+Integer.parseInt(getInHashMap(key));
+
+                setInHashMap(key,String.valueOf(res));
+
+                this.protocol.set(key,String.valueOf(res));
 
             }
             else{
@@ -264,7 +279,7 @@ public class ServerThread implements Runnable {
     private String getInHashMap(String k){ return this.map.get(k); }
     
 
-    private void incrByInHashMap(String k, int i){ this.map.put(k,this.map.get(k)+i); }
+
 
     private void setInHashMap(String k, String v){
         this.map.put(k,v);
