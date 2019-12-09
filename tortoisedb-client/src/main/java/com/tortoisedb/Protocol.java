@@ -112,6 +112,31 @@ public class Protocol {
             e.printStackTrace();
         }
     }
+
+    public void sadd(char key,String value) {
+        try {
+            socketBuffer.write_command("SADD");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+            socketBuffer.write_space();
+            socketBuffer.write_string(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void srem(char key,String value) {
+        try {
+            socketBuffer.write_command("SREM");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+            socketBuffer.write_space();
+            socketBuffer.write_string(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void exit() {
         try{
             socketBuffer.write_command("EXIT");

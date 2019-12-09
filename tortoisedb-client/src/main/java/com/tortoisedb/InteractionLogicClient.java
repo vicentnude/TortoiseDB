@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class InteractionLogicClient {
 
-    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, EXIT, DEFA,INCR,DECR,INBY}
+    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, EXIT, DEFA, INCR, DECR, INBY, SADD, SREM}
 
     private Protocol protocol;
     private boolean isRunning;
@@ -110,6 +110,24 @@ public class InteractionLogicClient {
                             else{
                                 System.out.println("The key does not exists.");
                             }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case SADD:
+                        if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
+                            this.protocol.sadd(newCommand.charAt(5),newCommand.substring(7));
+                            System.out.println(this.protocol.read_buffer());
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case SREM:
+                        if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
+                            this.protocol.srem(newCommand.charAt(5),newCommand.substring(7));
+                            System.out.println(this.protocol.read_buffer());
                         }
                         else{
                             System.out.println("ERROR 402: Unexpected format.");
