@@ -82,6 +82,9 @@ public class ServerThread implements Runnable {
                     case UPDT:
                         this.updateValueUsingKey();
                         break;
+                    case SAVE:
+                        this.saveHashMap();
+                        break;
                     case EXIT:
                         this.isRunning = false;
                         //saveHashMap();
@@ -181,10 +184,10 @@ public class ServerThread implements Runnable {
                         this.protocol.setAdd(key, value);
                     }
                     else
-                       this.protocol.error("Ya existe");
+                       this.protocol.error("This value already exist");
                 }
                 else {
-                    this.protocol.error("This value is not set/list");
+                    this.protocol.error("This key is not set/list");
                 }
             }
             else{
@@ -217,7 +220,7 @@ public class ServerThread implements Runnable {
                         this.protocol.error("This value is not exist");
                 }
                 else {
-                    this.protocol.error("This value is not set/list");
+                    this.protocol.error("This key is not set/list");
                 }
             }
             else{
@@ -270,11 +273,15 @@ public class ServerThread implements Runnable {
 
         try{
             if(this.exstInHashMap(key)) {
-                value = (String) getInHashMap(key);
-                this.protocol.get(key, value);
+                if(getInHashMap(key) instanceof String){
+                    value = (String) getInHashMap(key);
+                    this.protocol.get(key, value);
+                }
+                else
+                    this.protocol.error("This key is not a valid data");
             }
             else{
-                this.protocol.error("ERROR 502: Unexpected command.Key not found. Try SETT "+key+" value");
+                this.protocol.error("502: Unexpected command.Key not found. Try SETT "+key+" value");
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -359,7 +366,7 @@ public class ServerThread implements Runnable {
         this.map.replace(k,v);
     }
 
-    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT, DEFA, INCR, INBY, DECR, SADD, SREM }
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, INCR, INBY, DECR, SADD, SREM, SAVE, DEFA, EXIT }
 
     private void saveHashMap() {
         try {
