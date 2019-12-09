@@ -4,10 +4,11 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
 
 public class ServerThread implements Runnable {
 
-    private Map<String, String> map;
+    private Map<String, Object> map;
     private Protocol protocol;
     private MyLoggerHandler clientLogger;
     private State state;
@@ -24,7 +25,7 @@ public class ServerThread implements Runnable {
      * @throws IOException error creating the socket.
      */
     public ServerThread(Socket socket) throws IOException {
-        this.map            = new ConcurrentHashMap<>();
+        this.map            = new ConcurrentHashMap<String, Object>();
         //this.clientLogger   = new MyLoggerHandler(this.getClass().getName());
         this.protocol       = new Protocol(socket);
         this.state          = State.STRT;
@@ -69,6 +70,12 @@ public class ServerThread implements Runnable {
                     case GETT:
                         this.getHashMapValue();
                         break;
+                    case SADD:
+                        this.setAddValue();
+                        break;
+                    case SREM:
+                        this.delSetValue();
+                        break;
                     case SETT:
                         this.setValueAndKeyInHashMap();
                         break;
@@ -99,7 +106,7 @@ public class ServerThread implements Runnable {
             key = this.protocol.readSpace();
             if(exstInHashMap(key)) {
 
-                int res=Integer.parseInt("1")+Integer.parseInt(getInHashMap(key));
+                int res=Integer.parseInt("1")+Integer.parseInt((String) getInHashMap(key));
 
                 setInHashMap(key,String.valueOf(res));
 
@@ -143,7 +150,7 @@ public class ServerThread implements Runnable {
             key = this.protocol.readSpace();
             if(exstInHashMap(key)) {
 
-                int res=Integer.parseInt("-1")+Integer.parseInt(getInHashMap(key));
+                int res=Integer.parseInt("-1")+Integer.parseInt((String) getInHashMap(key));
 
                 setInHashMap(key,String.valueOf(res));
 
@@ -152,6 +159,66 @@ public class ServerThread implements Runnable {
             }
             else{
                 this.protocol.error("The key is not saved in the Database");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setAddValue() {
+        try{
+            String key, value;
+            this.protocol.readSpace();
+            key = this.protocol.readSpace();
+            this.protocol.readSpace();
+            value = this.protocol.getValue();
+            if(exstInHashMap(key)) {
+                if(getInHashMap(key) instanceof ArrayList){
+                    ArrayList<String> list = (ArrayList<String>) getInHashMap(key);
+                    if(!list.contains(value)){
+                        list.add(value);
+                        setInHashMap(key,list);
+                    }
+                    else
+                       this.protocol.error("Ya existe");
+                }
+                else {
+                    this.protocol.error("This value is not set/list");
+                }
+            }
+            else{
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(value);
+                setInHashMap(key,list);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void delSetValue() {
+        try{
+            String key, value;
+            this.protocol.readSpace();
+            key = this.protocol.readSpace();
+            this.protocol.readSpace();
+            value = this.protocol.getValue();
+            if(exstInHashMap(key)) {
+                if(getInHashMap(key) instanceof ArrayList){
+                    ArrayList<String> list = (ArrayList<String>) getInHashMap(key);
+                    if(list.contains(value)){
+                        list.remove(value);
+                        setInHashMap(key,list);
+                    }
+                    else
+                        this.protocol.error("This value is not exist");
+                }
+                else {
+                    this.protocol.error("This value is not set/list");
+                }
+            }
+            else{
+                this.protocol.error("This key set not exists");
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -200,7 +267,7 @@ public class ServerThread implements Runnable {
 
         try{
             if(this.exstInHashMap(key)) {
-                value = getInHashMap(key);
+                value = (String) getInHashMap(key);
                 this.protocol.get(key, value);
             }
             else{
@@ -216,9 +283,9 @@ public class ServerThread implements Runnable {
         try {
 
             this.protocol.readSpace();
-            key   = this.protocol.readSpace();
+            key = this.protocol.readSpace();
             this.protocol.readSpace();
-            value     = this.protocol.getValue();
+            value = this.protocol.getValue();
 
             if(exstInHashMap(key)){
                 this.protocol.error("ERROR 502: Unexpected command.This key already exists. Try UPDT "+key+" "+value);
@@ -276,20 +343,20 @@ public class ServerThread implements Runnable {
 
     private boolean exstInHashMap(String k){ return this.map.containsKey(k); }
 
-    private String getInHashMap(String k){ return this.map.get(k); }
+    private Object getInHashMap(String k){ return this.map.get(k); }
     
 
 
 
-    private void setInHashMap(String k, String v){
+    private void setInHashMap(String k, Object v){
         this.map.put(k,v);
     }
 
-    private  void updtInHashMap(String k, String v){
+    private  void updtInHashMap(String k, Object v){
         this.map.replace(k,v);
     }
 
-    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA,INCR,INBY,DECR }
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT, DEFA, INCR, INBY, DECR, SADD, SREM }
 
     private void saveHashMap() {
         try {
