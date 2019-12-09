@@ -86,6 +86,26 @@ public class Protocol {
         }
     }
 
+    public void setAdd(String key, String value){
+        try{
+            socketBuffer.write_command("RETN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("key set:"+key+" value:"+value);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void setRem(String key, String value){
+        try{
+            socketBuffer.write_command("ACKN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("Key set"+key+" value:"+value+" correctly deleted.");
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public void delete(String key) {
         try {
             socketBuffer.write_command("ACKN");

@@ -178,6 +178,7 @@ public class ServerThread implements Runnable {
                     if(!list.contains(value)){
                         list.add(value);
                         setInHashMap(key,list);
+                        this.protocol.setAdd(key, value);
                     }
                     else
                        this.protocol.error("Ya existe");
@@ -190,6 +191,7 @@ public class ServerThread implements Runnable {
                 ArrayList<String> list = new ArrayList<String>();
                 list.add(value);
                 setInHashMap(key,list);
+                this.protocol.setAdd(key, value);
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -209,6 +211,7 @@ public class ServerThread implements Runnable {
                     if(list.contains(value)){
                         list.remove(value);
                         setInHashMap(key,list);
+                        this.protocol.setRem(key, value);
                     }
                     else
                         this.protocol.error("This value is not exist");
