@@ -137,6 +137,14 @@ public class Protocol {
         }
     }
 
+    public void save() {
+        try{
+            socketBuffer.write_command("SAVE");
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void exit() {
         try{
             socketBuffer.write_command("EXIT");
