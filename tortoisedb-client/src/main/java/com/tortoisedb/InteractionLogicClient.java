@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class InteractionLogicClient {
 
-    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, INCR, DECR, INBY, SADD, SREM, SAVE, EXIT, DEFA}
+    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, INCR, DECR, INBY, SADD, SREM, SAVE, HELP, EXIT, DEFA}
 
     private Protocol protocol;
     private boolean isRunning;
@@ -192,6 +192,9 @@ public class InteractionLogicClient {
                             System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
+                    case HELP:
+                        help();
+                        break;
                     case EXIT:
                         if(newCommand.length() == 4) {
                             this.protocol.exit();
@@ -222,6 +225,46 @@ public class InteractionLogicClient {
             this.isRunning = false;
         }
     }
+
+    private void help() {
+        System.out.println("Welcome to Tortoise DB");
+        System.out.println(" ");
+        System.out.println("Commands:");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("SETT <SP> <key> <SP> <string>: ");
+        System.out.print("when a sett message is sent the client wants to save a key value in the DB. In case that the key already exist in the DB, this function returns an error and the user can update (UPDT) the function if he wants to");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("GETT <SP> <key>: ");
+        System.out.print("the gett function returns the value from a key provided by the client.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("DELT <SP> <key>: ");
+        System.out.print("delete the key, value using the key provided by the client.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("UPDT <SP> <key> <SP> <string>: ");
+        System.out.print("update the value using the key provided by the client.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("EXST <SP> <key> : ");
+        System.out.print("checks if the key exist.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("INCR <SP> <key>:  ");
+        System.out.print("the incr function adds one to the value from a key provided by the client.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("DECR <SP> <key>: ");
+        System.out.print("the decr  function subtract one to the value from a key provided by the client.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("EXIT  ");
+        System.out.print("closes the connection between the client and the server. End the client application.");
+
+    }
+
     public void setUser(String user){
         this.user = user;
     }
