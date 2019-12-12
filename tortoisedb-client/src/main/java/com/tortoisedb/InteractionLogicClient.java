@@ -315,44 +315,44 @@ public class InteractionLogicClient {
     }
 
     private void help() {
-        System.out.println("Welcome to Tortoise DB");
-        System.out.println(" ");
-        System.out.println("Commands:");
-        System.out.println(" ");
-        System.out.println(" ");
+        System.out.println("Welcome to Tortoise DB\n");
+        System.out.println("Commands:\n\n");
+
         System.out.println("SETT <SP> <key> <SP> <string>: ");
-        System.out.print("when a sett message is sent the client wants to save a key value in the DB. In case that the key already exist in the DB, this function returns an error and the user can update (UPDT) the function if he wants to");
-        System.out.println(" ");
-        System.out.println(" ");
+        System.out.print("When a sett message is sent the client wants to save a key value in the DB. In case that the key already exist in the DB, this function returns an error and the user can update (UPDT) the function if he wants to\n\n");
+
         System.out.println("GETT <SP> <key>: ");
-        System.out.print("the gett function returns the value from a key provided by the client.");
-        System.out.println(" ");
-        System.out.println(" ");
+        System.out.print("The gett function returns the value from a key provided by the client.\n\n");
+
         System.out.println("DELT <SP> <key>: ");
-        System.out.print("delete the key, value using the key provided by the client.");
-        System.out.println(" ");
-        System.out.println(" ");
+        System.out.print("Delete the key, value using the key provided by the client.\n\n");
+
         System.out.println("UPDT <SP> <key> <SP> <string>: ");
-        System.out.print("update the value using the key provided by the client.");
-        System.out.println(" ");
-        System.out.println(" ");
+        System.out.print("Update the value using the key provided by the client.\n\n");
+
         System.out.println("EXST <SP> <key> : ");
-        System.out.print("checks if the key exist.");
-        System.out.println(" ");
-        System.out.println(" ");
+        System.out.print("Checks if the key exist.\n\n");
+
         System.out.println("INCR <SP> <key>:  ");
-        System.out.print("the incr function adds one to the value from a key provided by the client.");
-        System.out.println(" ");
-        System.out.println(" ");
+        System.out.print("The incr function adds one to the value from a key provided by the client.\n\n");
+
         System.out.println("DECR <SP> <key>: ");
-        System.out.print("the decr  function subtract one to the value from a key provided by the client.");
-        System.out.println(" ");
-        System.out.println(" ");
-        System.out.println("EXIT  ");
-        System.out.println("closes the connection between the client and the server. End the client application.");
-        System.out.println(" ");
-        System.out.println("Now try yourself:");
-        System.out.println(" ");
+        System.out.print("The decr  function subtract one to the value from a key provided by the client.\n\n");
+
+        System.out.println("INCRBY <SP> <key> <SP> <int>: ");
+        System.out.print("The incrby  function adds the given integer to the value from the key provided by the client.\n\n");
+
+        System.out.println("SADD <SP> <key> <SP> <string>: ");
+        System.out.print("Appends the value to a list given by the key, if the key doesn't exist it creates a new list and adds the value.\n\n");
+
+        System.out.println("SREM <SP> <key> <SP> <string>: ");
+        System.out.print("removes the value from the list given by the key.\n\n");
+
+        System.out.println("SAVE:  ");
+        System.out.print("saves the database to disk.");
+
+        System.out.println("EXIT:  ");
+        System.out.print("closes the connection between the client and the server. End the client application.");
 
     }
 
