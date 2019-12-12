@@ -20,6 +20,16 @@ public class Protocol {
             e.printStackTrace();
         }
     }
+    public void load() {
+        try {
+            socketBuffer.write_command("LOAD");
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getCommand() throws IOException {
         return this.socketBuffer.read_command();
     }

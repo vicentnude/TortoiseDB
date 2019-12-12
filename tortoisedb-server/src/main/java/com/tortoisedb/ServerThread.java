@@ -87,6 +87,9 @@ public class ServerThread implements Runnable {
                     case SAVE:
                         this.saveHashMap();
                         break;
+                    case LOAD:
+                        this.retrieveHashMap();
+                        break;
                     case EXIT:
                         this.isRunning = false;
                         saveHashMap();
@@ -414,7 +417,7 @@ public class ServerThread implements Runnable {
         this.map.replace(k,v);
     }
 
-    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, INCR, INBY,DEBY, DECR, SADD, SREM, SAVE, DEFA, EXIT }
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST,LOAD,INCR, INBY,DEBY, DECR, SADD, SREM, SAVE, DEFA, EXIT }
 
     private void saveHashMap() {
         try {
