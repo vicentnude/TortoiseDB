@@ -63,6 +63,9 @@ public class ServerThread implements Runnable {
                     case INBY:
                         this.incrValuebyKey();
                         break;
+                    case DEBY:
+                        this.decrValuebyKey();
+                        break;
                     case DECR:
                         this.decrKeyValue();
                         break;
@@ -101,19 +104,49 @@ public class ServerThread implements Runnable {
             System.err.println("Can't read socketBuffer: " + ex.getMessage());
         }
     }
+
+    private void decrValuebyKey() {
+        try{
+            String key,increment;
+            this.protocol.readSpace();
+            key = this.protocol.getValue();
+            this.protocol.readSpace();
+            increment=this.protocol.getValue();
+            if(exstInHashMap(key) && checkIfIsNumber(increment)) {
+
+                int res=Integer.parseInt((String) getInHashMap(key))-Integer.parseInt(increment);
+                setInHashMap(key,String.valueOf(res));
+
+                this.protocol.set(key,String.valueOf(res));
+
+            }
+            else{
+                this.protocol.error("Key not saved or value not number");
+            }
+        }catch (NumberFormatException e) {
+            this.protocol.error("The value is not numeric");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private void incrValue() {
         try{
             String key;
             this.protocol.readSpace();
             key = this.protocol.getValue();
             if(exstInHashMap(key)) {
+                if (checkIfIsNumber((String) getInHashMap(key))) {
+                    int res = Integer.parseInt("1") + Integer.parseInt((String) getInHashMap(key));
 
-                int res=Integer.parseInt("1")+Integer.parseInt((String) getInHashMap(key));
+                    System.out.println(res);
+                    setInHashMap(key, String.valueOf(res));
 
-                System.out.println(res);
-                setInHashMap(key,String.valueOf(res));
-
-                this.protocol.set(key,String.valueOf(res));
+                    this.protocol.set(key, String.valueOf(res));
+                }
+                else{
+                    this.protocol.error("value is not an integer.");
+                }
 
             }
             else{
@@ -132,18 +165,16 @@ public class ServerThread implements Runnable {
             key = this.protocol.getValue();
             this.protocol.readSpace();
             increment=this.protocol.getValue();
-            System.out.println("print:"+increment);
-            if(exstInHashMap(key)) {
+            if(exstInHashMap(key) && checkIfIsNumber(increment)) {
 
-                //int res=Integer.parseInt(increment)+Integer.parseInt(getInHashMap(key));
+                int res=Integer.parseInt(increment)+Integer.parseInt((String) getInHashMap(key));
+                setInHashMap(key,String.valueOf(res));
 
-                //setInHashMap(key,String.valueOf(res));
-
-                //this.protocol.set(key,String.valueOf(res));
+                this.protocol.set(key,String.valueOf(res));
 
             }
             else{
-                this.protocol.error("The key is not saved in the Database");
+                this.protocol.error("key not saved or value not number");
             }
         }catch (NumberFormatException e) {
             this.protocol.error("The value is not numeric");
@@ -152,29 +183,31 @@ public class ServerThread implements Runnable {
         }
     }
     private void decrKeyValue() {
-        try{
+        try {
             String key;
             this.protocol.readSpace();
             key = this.protocol.getValue();
-            if(exstInHashMap(key)) {
+            if (exstInHashMap(key)) {
+                if (checkIfIsNumber((String) getInHashMap(key))) {
+                    int res = Integer.parseInt("-1") + Integer.parseInt((String) getInHashMap(key));
 
-                int res=Integer.parseInt("-1")+Integer.parseInt((String) getInHashMap(key));
+                    System.out.println(res);
+                    setInHashMap(key, String.valueOf(res));
 
-                setInHashMap(key,String.valueOf(res));
+                    this.protocol.set(key, String.valueOf(res));
+                } else {
+                    this.protocol.error("value is not an integer.");
+                }
 
-                this.protocol.set(key,String.valueOf(res));
-
-            }
-            else{
+            } else {
                 this.protocol.error("The key is not saved in the Database");
             }
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             this.protocol.error("The value is not numeric");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     private void setAddValue() throws IOException {
         try{
             String key, value;
@@ -381,7 +414,7 @@ public class ServerThread implements Runnable {
         this.map.replace(k,v);
     }
 
-    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, INCR, INBY, DECR, SADD, SREM, SAVE, DEFA, EXIT }
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, INCR, INBY,DEBY, DECR, SADD, SREM, SAVE, DEFA, EXIT }
 
     private void saveHashMap() {
         try {
@@ -428,5 +461,16 @@ public class ServerThread implements Runnable {
             this.saveHashMap();
     }
 
-
+    private boolean checkIfIsNumber(String num){
+        String c = "0123456789";
+        if (num.charAt(0) == '-'){
+            num = num.substring(1,num.length());
+        }
+        for(int i=0;i<num.length();i++){
+            if (!c.contains(String.valueOf(num.charAt(i)))){
+                return false;
+            }
+        }
+        return true;
+    }
 }

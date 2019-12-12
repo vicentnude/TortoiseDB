@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class InteractionLogicClient {
 
-    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, INCR, DECR, INBY, SADD, SREM, SAVE, HELP, EXIT, DEFA}
+    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, INCR, DECR, INBY, DEBY, SADD, SREM, SAVE, HELP, EXIT, DEFA}
 
     private Protocol protocol;
     private boolean isRunning;
@@ -89,6 +89,30 @@ public class InteractionLogicClient {
                                 }
                                 else {
                                     this.protocol.incrementBy(key,value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case DEBY:
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1){
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.decrementBy(key,value);
                                     System.out.println(this.protocol.read_buffer());
                                 }
                             }

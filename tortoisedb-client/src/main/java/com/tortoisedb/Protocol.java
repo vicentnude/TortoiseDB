@@ -54,6 +54,17 @@ public class Protocol {
             e.printStackTrace();
         }
     }
+    public void decrementBy(String key,String value) {
+        try {
+            socketBuffer.write_command("DEBY");
+            socketBuffer.write_space();
+            socketBuffer.write_string(key);
+            socketBuffer.write_space();
+            socketBuffer.write_string(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public void decrement(String key) {
         try {
             socketBuffer.write_command("DECR");
