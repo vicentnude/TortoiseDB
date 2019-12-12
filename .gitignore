@@ -2,3 +2,10 @@
 .DS_Store
 *.iml
 target/
+tortoisedb-client/.classpath
+tortoisedb-client/.project
+tortoisedb-client/.settings/
+tortoisedb-server/.classpath
+tortoisedb-server/.project
+tortoisedb-server/.settings/
+tortoisedb-server/nullHM.db

@@ -6,8 +6,7 @@ import java.util.Scanner;
 
 public class InteractionLogicClient {
 
-    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, EXIT, DEFA}
-    private final int COMMAND_SIZE = 4;
+    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, INCR, DECR, INBY, SADD, SREM, SAVE, HELP, EXIT, DEFA}
 
     private final Protocol protocol;
     private boolean isRunning;
@@ -26,26 +25,238 @@ public class InteractionLogicClient {
     }
 
     public void run() throws IOException {
+        int position;
         try{
             while(this.isRunning){
                 switch (state){
                     case STRT:
-                        this.caseSTRT();
+                        this.protocol.start(user);
+                        this.protocol.getCommand();
+                        System.out.println("Type help if you want to know how to start");
+                        this.state = State.EXIT;
                         break;
                     case SETT:
-                        this.caseSETT();
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1){
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.set(key, value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
                         break;
                     case GETT:
-                        this.caseGETT();
+                        position = newCommand.indexOf(" ");
+                        if(position == 4) {
+                            String key = newCommand.substring(position+1,newCommand.length());
+                            if(key.length() >= 40 ){
+                                System.out.println("The key are too long.");
+                            }
+                            else {
+                                this.protocol.get(key);
+                                System.out.println(this.protocol.read_buffer());
+                            }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case INBY:
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1){
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.incrementBy(key,value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case INCR:
+                        position = newCommand.indexOf(" ");
+                        if(position == 4) {
+                            String key = newCommand.substring(position+1,newCommand.length());
+                            if(key.length() >= 40 ){
+                                System.out.println("The key are too long.");
+                            }
+                            else {
+                                this.protocol.increment(key);
+                                System.out.println(this.protocol.read_buffer());
+                            }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case DECR:
+                        position = newCommand.indexOf(" ");
+                        if(position == 4) {
+                            String key = newCommand.substring(position+1,newCommand.length());
+                            if(key.length() >= 40 ){
+                                System.out.println("The key are too long.");
+                            }
+                            else {
+                                this.protocol.decrement(key);
+                                System.out.println(this.protocol.read_buffer());
+                            }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
                         break;
                     case DELT:
-                        this.caseDELT();
+                        position = newCommand.indexOf(" ");
+                        if(position == 4) {
+                            String key = newCommand.substring(position+1,newCommand.length());
+                            if(key.length() >= 40){
+                                System.out.println("The key/value are too long.");
+                            }
+                            else {
+                                this.protocol.delete(key);
+                                System.out.println(this.protocol.read_buffer());
+                            }
+
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
                         break;
                     case UPDT:
-                        this.caseUPDT();
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1) {
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.update(key,value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
                         break;
                     case EXST:
-                        this.caseEXST();
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            String key = newCommand.substring(position+1,newCommand.length());
+                            if(key.length() >= 40){
+                                System.out.println("The key/value are too long.");
+                            }
+                            else {
+                                this.protocol.exist(key);
+                                String exists = this.protocol.read_buffer();
+                                if(exists.charAt(exists.length()-1) == '1'){
+                                    System.out.println("The key exists.");
+                                }
+                                else{
+                                    System.out.println("The key does not exists.");
+                                }
+                            }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case SADD:
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1){
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.sadd(key,value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case SREM:
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1){
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.srem(key,value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case SAVE:
+                        if(newCommand.length() == 4) {
+                            this.protocol.save();
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
+                        break;
+                    case HELP:
+                        if(newCommand.length() == 4) {
+                            help();
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
                         break;
                     case EXIT:
                         this.caseEXIT();
@@ -64,91 +275,49 @@ public class InteractionLogicClient {
         }
     }
 
-    private void getAndCheckCommand() {
-        this.newCommand = sc.nextLine();
+    private void help() {
+        System.out.println("Welcome to Tortoise DB");
+        System.out.println(" ");
+        System.out.println("Commands:");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("SETT <SP> <key> <SP> <string>: ");
+        System.out.print("when a sett message is sent the client wants to save a key value in the DB. In case that the key already exist in the DB, this function returns an error and the user can update (UPDT) the function if he wants to");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("GETT <SP> <key>: ");
+        System.out.print("the gett function returns the value from a key provided by the client.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("DELT <SP> <key>: ");
+        System.out.print("delete the key, value using the key provided by the client.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("UPDT <SP> <key> <SP> <string>: ");
+        System.out.print("update the value using the key provided by the client.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("EXST <SP> <key> : ");
+        System.out.print("checks if the key exist.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("INCR <SP> <key>:  ");
+        System.out.print("the incr function adds one to the value from a key provided by the client.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("DECR <SP> <key>: ");
+        System.out.print("the decr  function subtract one to the value from a key provided by the client.");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("EXIT  ");
+        System.out.println("closes the connection between the client and the server. End the client application.");
+        System.out.println(" ");
+        System.out.println("Now try yourself:");
+        System.out.println(" ");
 
-        if (newCommand.length() < this.COMMAND_SIZE) {
-            state = null;
-        } else {
-            state = checkCommand(newCommand.substring(0, this.COMMAND_SIZE));
-        }
-
-        if (state == null) {
-            state = State.DEFA;
-        }
     }
 
-    private void caseUPDT() throws IOException {
-        if (newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length() > 7) {
-            this.protocol.update(newCommand.charAt(5), newCommand.substring(7));
-            System.out.println(this.protocol.read_buffer());
-        } else {
-            System.out.println("ERROR 402: Unexpected format.");
-        }
-    }
-
-    private void caseEXIT() throws IOException {
-        if (newCommand.length() == COMMAND_SIZE) {
-            this.protocol.exit();
-            this.isRunning = false;
-        } else {
-            System.out.println("ERROR 402: Unexpected format.");
-        }
-    }
-
-    private void caseEXST() throws IOException {
-        if (this.checkChatAtPosition4and5()) {
-            this.protocol.exist(newCommand.charAt(5));
-            final String exists = this.protocol.read_buffer();
-
-            if (exists.charAt(exists.length() - 1) == '1') {
-                System.out.println("The key exists.");
-            } else {
-                System.out.println("The key does not exists.");
-            }
-        } else {
-            System.out.println("ERROR 402: Unexpected format.");
-        }
-    }
-
-    private void caseSTRT() throws IOException {
-        this.protocol.start(user);
-        System.out.println(this.protocol.getCommand());
-        this.state = State.EXIT;
-    }
-
-    private void caseSETT() throws IOException {
-        if (newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length() > 7) {
-            this.protocol.set(newCommand.charAt(5), newCommand.substring(7));
-            System.out.println(this.protocol.read_buffer());
-        } else {
-            System.out.println("ERROR 402: Unexpected format.");
-        }
-    }
-
-    private void caseGETT() throws IOException {
-        if (this.checkChatAtPosition4and5()) {
-            this.protocol.get(newCommand.charAt(5));
-            System.out.println(this.protocol.read_buffer());
-        } else {
-            System.out.println("ERROR 402: Unexpected format.");
-        }
-    }
-
-    private void caseDELT() throws IOException {
-        if (this.checkChatAtPosition4and5()) {
-            this.protocol.delete(newCommand.charAt(5));
-            System.out.println(this.protocol.read_buffer());
-        } else {
-            System.out.println("ERROR 402: Unexpected format.");
-        }
-    }
-
-    private boolean checkChatAtPosition4and5() {
-        return this.newCommand.charAt(4) == ' ' && this.newCommand.length() > 5;
-    }
-
-    public void setUser(final String user){
+    public void setUser(String user){
         this.user = user;
     }
 
