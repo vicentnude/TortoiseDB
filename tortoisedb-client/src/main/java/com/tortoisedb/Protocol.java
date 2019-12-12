@@ -34,31 +34,31 @@ public class Protocol {
             e.printStackTrace();
         }
     }
-    public void increment(char key) {
+    public void increment(String key) {
         try {
             socketBuffer.write_command("INCR");
             socketBuffer.write_space();
-            socketBuffer.write_char(key);
+            socketBuffer.write_string(key);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void incrementBy(char key,String value) {
+    public void incrementBy(String key,String value) {
         try {
             socketBuffer.write_command("INBY");
             socketBuffer.write_space();
-            socketBuffer.write_char(key);
+            socketBuffer.write_string(key);
             socketBuffer.write_space();
             socketBuffer.write_string(value);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void decrement(char key) {
+    public void decrement(String key) {
         try {
             socketBuffer.write_command("DECR");
             socketBuffer.write_space();
-            socketBuffer.write_char(key);
+            socketBuffer.write_string(key);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,11 +113,11 @@ public class Protocol {
         }
     }
 
-    public void sadd(char key,String value) {
+    public void sadd(String key,String value) {
         try {
             socketBuffer.write_command("SADD");
             socketBuffer.write_space();
-            socketBuffer.write_char(key);
+            socketBuffer.write_string(key);
             socketBuffer.write_space();
             socketBuffer.write_string(value);
         } catch (IOException e) {
@@ -125,11 +125,11 @@ public class Protocol {
         }
     }
 
-    public void srem(char key,String value) {
+    public void srem(String key,String value) {
         try {
             socketBuffer.write_command("SREM");
             socketBuffer.write_space();
-            socketBuffer.write_char(key);
+            socketBuffer.write_string(key);
             socketBuffer.write_space();
             socketBuffer.write_string(value);
         } catch (IOException e) {

@@ -32,7 +32,8 @@ public class InteractionLogicClient {
                 switch (state){
                     case STRT:
                         this.protocol.start(user);
-                        System.out.println(this.protocol.getCommand());
+                        this.protocol.getCommand();
+                        System.out.println("Type help if you want to know how to start");
                         this.state = State.EXIT;
                         break;
                     case SETT:
@@ -76,28 +77,56 @@ public class InteractionLogicClient {
                         }
                         break;
                     case INBY:
-                        if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
-
-                            this.protocol.incrementBy(newCommand.charAt(5),newCommand.substring(7));
-                            System.out.println(this.protocol.read_buffer());
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1){
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.incrementBy(key,value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
                         }
                         else{
                             System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case INCR:
-                        if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
-                            this.protocol.increment(newCommand.charAt(5));
-                            System.out.println(this.protocol.read_buffer());
+                        position = newCommand.indexOf(" ");
+                        if(position == 4) {
+                            String key = newCommand.substring(position+1,newCommand.length());
+                            if(key.length() >= 40 ){
+                                System.out.println("The key are too long.");
+                            }
+                            else {
+                                this.protocol.increment(key);
+                                System.out.println(this.protocol.read_buffer());
+                            }
                         }
                         else{
                             System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case DECR:
-                        if(newCommand.charAt(4) == ' ' && newCommand.length()>5) {
-                            this.protocol.decrement(newCommand.charAt(5));
-                            System.out.println(this.protocol.read_buffer());
+                        position = newCommand.indexOf(" ");
+                        if(position == 4) {
+                            String key = newCommand.substring(position+1,newCommand.length());
+                            if(key.length() >= 40 ){
+                                System.out.println("The key are too long.");
+                            }
+                            else {
+                                this.protocol.decrement(key);
+                                System.out.println(this.protocol.read_buffer());
+                            }
                         }
                         else{
                             System.out.println("ERROR 402: Unexpected format.");
@@ -167,18 +196,48 @@ public class InteractionLogicClient {
                         }
                         break;
                     case SADD:
-                        if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
-                            this.protocol.sadd(newCommand.charAt(5),newCommand.substring(7));
-                            System.out.println(this.protocol.read_buffer());
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1){
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.sadd(key,value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
                         }
                         else{
                             System.out.println("ERROR 402: Unexpected format.");
                         }
                         break;
                     case SREM:
-                        if(newCommand.charAt(4) == ' ' && newCommand.charAt(6) == ' ' && newCommand.length()>7){
-                            this.protocol.srem(newCommand.charAt(5),newCommand.substring(7));
-                            System.out.println(this.protocol.read_buffer());
+                        position = newCommand.indexOf(" ");
+                        if(position == 4){
+                            newCommand = newCommand.substring(position+1,newCommand.length());
+                            position = newCommand.indexOf(" ");
+                            if(position != -1){
+                                String key = newCommand.substring(0,position);
+                                String value = newCommand.substring(position+1,newCommand.length());
+                                if(key.length() >= 40 || value.length() >= 40){
+                                    System.out.println("The key/value are too long.");
+                                }
+                                else {
+                                    this.protocol.srem(key,value);
+                                    System.out.println(this.protocol.read_buffer());
+                                }
+                            }
+                            else{
+                                System.out.println("ERROR 402: Unexpected format.");
+                            }
                         }
                         else{
                             System.out.println("ERROR 402: Unexpected format.");
@@ -193,7 +252,12 @@ public class InteractionLogicClient {
                         }
                         break;
                     case HELP:
-                        help();
+                        if(newCommand.length() == 4) {
+                            help();
+                        }
+                        else{
+                            System.out.println("ERROR 402: Unexpected format.");
+                        }
                         break;
                     case EXIT:
                         if(newCommand.length() == 4) {
@@ -261,7 +325,10 @@ public class InteractionLogicClient {
         System.out.println(" ");
         System.out.println(" ");
         System.out.println("EXIT  ");
-        System.out.print("closes the connection between the client and the server. End the client application.");
+        System.out.println("closes the connection between the client and the server. End the client application.");
+        System.out.println(" ");
+        System.out.println("Now try yourself:");
+        System.out.println(" ");
 
     }
 

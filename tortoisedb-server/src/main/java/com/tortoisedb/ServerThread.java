@@ -105,11 +105,12 @@ public class ServerThread implements Runnable {
         try{
             String key;
             this.protocol.readSpace();
-            key = this.protocol.readSpace();
+            key = this.protocol.getValue();
             if(exstInHashMap(key)) {
 
                 int res=Integer.parseInt("1")+Integer.parseInt((String) getInHashMap(key));
 
+                System.out.println(res);
                 setInHashMap(key,String.valueOf(res));
 
                 this.protocol.set(key,String.valueOf(res));
@@ -126,8 +127,9 @@ public class ServerThread implements Runnable {
         try{
             String key,increment;
             this.protocol.readSpace();
-            key = this.protocol.readSpace();
-            increment=this.protocol.readSpace();
+            key = this.protocol.getValue();
+            this.protocol.readSpace();
+            increment=this.protocol.getValue();
             System.out.println("print:"+increment);
             if(exstInHashMap(key)) {
 
@@ -149,7 +151,7 @@ public class ServerThread implements Runnable {
         try{
             String key;
             this.protocol.readSpace();
-            key = this.protocol.readSpace();
+            key = this.protocol.getValue();
             if(exstInHashMap(key)) {
 
                 int res=Integer.parseInt("-1")+Integer.parseInt((String) getInHashMap(key));
@@ -171,7 +173,7 @@ public class ServerThread implements Runnable {
         try{
             String key, value;
             this.protocol.readSpace();
-            key = this.protocol.readSpace();
+            key = this.protocol.getValue();
             this.protocol.readSpace();
             value = this.protocol.getValue();
             if(exstInHashMap(key)) {
@@ -204,7 +206,7 @@ public class ServerThread implements Runnable {
         try{
             String key, value;
             this.protocol.readSpace();
-            key = this.protocol.readSpace();
+            key = this.protocol.getValue();
             this.protocol.readSpace();
             value = this.protocol.getValue();
             if(exstInHashMap(key)) {
