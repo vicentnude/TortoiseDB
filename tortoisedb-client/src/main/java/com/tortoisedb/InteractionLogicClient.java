@@ -44,7 +44,7 @@ public class InteractionLogicClient {
                             if(position != -1){
                                 String key = newCommand.substring(0,position);
                                 String value = newCommand.substring(position+1,newCommand.length());
-                                if(key.length() >= 40 || value.length() >= 40){
+                                if(key.length() >= 60 || value.length() >= 60){
                                     System.out.println("The key/value are too long.");
                                 }
                                 else {
@@ -64,7 +64,7 @@ public class InteractionLogicClient {
                         position = newCommand.indexOf(" ");
                         if(position == 4) {
                             String key = newCommand.substring(position+1,newCommand.length());
-                            if(key.length() >= 40 ){
+                            if(key.length() >= 60 ){
                                 System.out.println("The key are too long.");
                             }
                             else {
@@ -84,7 +84,7 @@ public class InteractionLogicClient {
                             if(position != -1){
                                 String key = newCommand.substring(0,position);
                                 String value = newCommand.substring(position+1,newCommand.length());
-                                if(key.length() >= 40 || value.length() >= 40){
+                                if(key.length() >= 60 || value.length() >= 60){
                                     System.out.println("The key/value are too long.");
                                 }
                                 else {
@@ -108,7 +108,7 @@ public class InteractionLogicClient {
                             if(position != -1){
                                 String key = newCommand.substring(0,position);
                                 String value = newCommand.substring(position+1,newCommand.length());
-                                if(key.length() >= 40 || value.length() >= 40){
+                                if(key.length() >= 60 || value.length() >= 60){
                                     System.out.println("The key/value are too long.");
                                 }
                                 else {
@@ -128,7 +128,7 @@ public class InteractionLogicClient {
                         position = newCommand.indexOf(" ");
                         if(position == 4) {
                             String key = newCommand.substring(position+1,newCommand.length());
-                            if(key.length() >= 40 ){
+                            if(key.length() >= 60 ){
                                 System.out.println("The key are too long.");
                             }
                             else {
@@ -144,7 +144,7 @@ public class InteractionLogicClient {
                         position = newCommand.indexOf(" ");
                         if(position == 4) {
                             String key = newCommand.substring(position+1,newCommand.length());
-                            if(key.length() >= 40 ){
+                            if(key.length() >= 60 ){
                                 System.out.println("The key are too long.");
                             }
                             else {
@@ -160,7 +160,7 @@ public class InteractionLogicClient {
                         position = newCommand.indexOf(" ");
                         if(position == 4) {
                             String key = newCommand.substring(position+1,newCommand.length());
-                            if(key.length() >= 40){
+                            if(key.length() >= 60){
                                 System.out.println("The key/value are too long.");
                             }
                             else {
@@ -181,7 +181,7 @@ public class InteractionLogicClient {
                             if(position != -1) {
                                 String key = newCommand.substring(0,position);
                                 String value = newCommand.substring(position+1,newCommand.length());
-                                if(key.length() >= 40 || value.length() >= 40){
+                                if(key.length() >= 60 || value.length() >= 60){
                                     System.out.println("The key/value are too long.");
                                 }
                                 else {
@@ -201,7 +201,7 @@ public class InteractionLogicClient {
                         position = newCommand.indexOf(" ");
                         if(position == 4){
                             String key = newCommand.substring(position+1,newCommand.length());
-                            if(key.length() >= 40){
+                            if(key.length() >= 60){
                                 System.out.println("The key/value are too long.");
                             }
                             else {
@@ -227,7 +227,7 @@ public class InteractionLogicClient {
                             if(position != -1){
                                 String key = newCommand.substring(0,position);
                                 String value = newCommand.substring(position+1,newCommand.length());
-                                if(key.length() >= 40 || value.length() >= 40){
+                                if(key.length() >= 60 || value.length() >= 60){
                                     System.out.println("The key/value are too long.");
                                 }
                                 else {
@@ -251,7 +251,7 @@ public class InteractionLogicClient {
                             if(position != -1){
                                 String key = newCommand.substring(0,position);
                                 String value = newCommand.substring(position+1,newCommand.length());
-                                if(key.length() >= 40 || value.length() >= 40){
+                                if(key.length() >= 60 || value.length() >= 60){
                                     System.out.println("The key/value are too long.");
                                 }
                                 else {
