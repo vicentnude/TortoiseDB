@@ -119,7 +119,9 @@ public class ServerThread implements Runnable {
             else{
                 this.protocol.error("The key is not saved in the Database");
             }
-        }catch (Exception e) {
+        }catch (NumberFormatException e) {
+            this.protocol.error("The value is not numeric");
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -143,7 +145,9 @@ public class ServerThread implements Runnable {
             else{
                 this.protocol.error("The key is not saved in the Database");
             }
-        }catch (Exception e) {
+        }catch (NumberFormatException e) {
+            this.protocol.error("The value is not numeric");
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -164,7 +168,9 @@ public class ServerThread implements Runnable {
             else{
                 this.protocol.error("The key is not saved in the Database");
             }
-        }catch (Exception e) {
+        }catch (NumberFormatException e) {
+            this.protocol.error("The value is not numeric");
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -357,6 +363,7 @@ public class ServerThread implements Runnable {
             System.err.println("Can't read socketBuffer: " + ex.getMessage());
         }
     }
+
     private void deltInHashMap(String k){ this.map.remove(k); }
 
     private boolean exstInHashMap(String k){ return this.map.containsKey(k); }
