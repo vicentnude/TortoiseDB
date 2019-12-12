@@ -167,7 +167,7 @@ public class ServerThread implements Runnable {
         }
     }
 
-    private void setAddValue() {
+    private void setAddValue() throws IOException {
         try{
             String key, value;
             this.protocol.readSpace();
@@ -200,7 +200,7 @@ public class ServerThread implements Runnable {
         }
     }
 
-    private void delSetValue() {
+    private void delSetValue() throws IOException {
         try{
             String key, value;
             this.protocol.readSpace();
@@ -230,7 +230,7 @@ public class ServerThread implements Runnable {
         }
     }
 
-    private void deleteKeyValue() {
+    private void deleteKeyValue() throws IOException {
         try{
             String key;
             this.protocol.readSpace();
@@ -276,6 +276,10 @@ public class ServerThread implements Runnable {
                     value = (String) getInHashMap(key);
                     this.protocol.get(key, value);
                 }
+                else if(getInHashMap(key) instanceof ArrayList){
+                    value = getInHashMap(key).toString();
+                    this.protocol.get(key, value);
+                }
                 else
                     this.protocol.error("This key is not a valid data");
             }
@@ -311,13 +315,17 @@ public class ServerThread implements Runnable {
         String key, value;
         try{
             this.protocol.readSpace();
-            key     = this.protocol.getValue();
+            key = this.protocol.getValue();
             this.protocol.readSpace();
-            value   = this.protocol.getValue();
+            value = this.protocol.getValue();
 
             if(exstInHashMap(key)) {
-                updtInHashMap(key, value);
-                this.protocol.update(key, value);
+                if(getInHashMap(key) instanceof String){
+                    updtInHashMap(key, value);
+                    this.protocol.update(key, value);
+                }
+                else
+                    this.protocol.error("This key is not a valid data");
             }
             else{
                 this.protocol.error("Key not found.");
