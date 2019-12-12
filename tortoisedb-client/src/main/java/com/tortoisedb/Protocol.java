@@ -34,6 +34,35 @@ public class Protocol {
             e.printStackTrace();
         }
     }
+    public void increment(char key) {
+        try {
+            socketBuffer.write_command("INCR");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void incrementBy(char key,String value) {
+        try {
+            socketBuffer.write_command("INBY");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+            socketBuffer.write_space();
+            socketBuffer.write_string(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void decrement(char key) {
+        try {
+            socketBuffer.write_command("DECR");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public void get(String key) {
         try {
             socketBuffer.write_command("GETT");
@@ -83,6 +112,39 @@ public class Protocol {
             e.printStackTrace();
         }
     }
+
+    public void sadd(char key,String value) {
+        try {
+            socketBuffer.write_command("SADD");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+            socketBuffer.write_space();
+            socketBuffer.write_string(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void srem(char key,String value) {
+        try {
+            socketBuffer.write_command("SREM");
+            socketBuffer.write_space();
+            socketBuffer.write_char(key);
+            socketBuffer.write_space();
+            socketBuffer.write_string(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void save() {
+        try{
+            socketBuffer.write_command("SAVE");
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void exit() {
         try{
             socketBuffer.write_command("EXIT");
