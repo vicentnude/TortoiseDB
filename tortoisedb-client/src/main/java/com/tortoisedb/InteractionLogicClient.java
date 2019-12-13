@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class InteractionLogicClient {
 
-    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, INCR, DECR, INBY, DEBY, SADD, SREM, SAVE, HELP, EXIT, DEFA}
+    private enum State{STRT, SETT, GETT, DELT, UPDT, EXST, INCR, DECR, LOAD,INBY, DEBY, SADD, SREM, SAVE, HELP, EXIT, DEFA}
 
     private Protocol protocol;
     private boolean isRunning;
@@ -35,6 +35,9 @@ public class InteractionLogicClient {
                         this.protocol.getCommand();
                         System.out.println("Type help if you want to know how to start");
                         this.state = State.EXIT;
+                        break;
+                    case LOAD:
+                        this.protocol.load();
                         break;
                     case SETT:
                         position = newCommand.indexOf(" ");

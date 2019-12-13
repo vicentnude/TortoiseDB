@@ -39,6 +39,7 @@ public class Protocol {
         }
     }
 
+
     public void set(String key,String value) {
         try {
             socketBuffer.write_command("ACKN");
@@ -125,6 +126,7 @@ public class Protocol {
             e.printStackTrace();
         }
     }
+
 
     public void exist(String exists) {
         try {
