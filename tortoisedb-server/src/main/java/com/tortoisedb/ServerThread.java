@@ -4,10 +4,11 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
 
 public class ServerThread implements Runnable {
 
-    private Map<String, String> map;
+    private Map<String, Object> map;
     private Protocol protocol;
     private MyLoggerHandler clientLogger;
     private State state;
@@ -15,17 +16,24 @@ public class ServerThread implements Runnable {
     private Socket socket;
     private String user;
 
+    private int counter;
+    private int interval;
+
     /**
      * Constructor, creates a new protocol object
      * @param socket the socket used in the communication
      * @throws IOException error creating the socket.
      */
     public ServerThread(Socket socket) throws IOException {
-        this.map            = new ConcurrentHashMap<>();
+        this.map            = new ConcurrentHashMap<String, Object>();
         //this.clientLogger   = new MyLoggerHandler(this.getClass().getName());
         this.protocol       = new Protocol(socket);
         this.state          = State.STRT;
         this.socket         = socket;
+
+        this.counter = 0;
+        this.interval = 10;
+
         isRunning = true;
     }
 
@@ -33,11 +41,11 @@ public class ServerThread implements Runnable {
     public void run() {
         try {
             while(this.isRunning) {
+                counter();
                 state = checkCommand(protocol.getCommand());
                 if (state == null) {
                     state = State.DEFA;
                 }
-                System.out.println(state); //temporal
                 switch (this.state) {
                     case STRT:
                         this.readSTRT();
@@ -49,14 +57,38 @@ public class ServerThread implements Runnable {
                     case EXST:
                         this.checkIfExistKeyvalue();
                         break;
+                    case INCR:
+                        this.incrValue();
+                        break;
+                    case INBY:
+                        this.incrValuebyKey();
+                        break;
+                    case DEBY:
+                        this.decrValuebyKey();
+                        break;
+                    case DECR:
+                        this.decrKeyValue();
+                        break;
                     case GETT:
                         this.getHashMapValue();
+                        break;
+                    case SADD:
+                        this.setAddValue();
+                        break;
+                    case SREM:
+                        this.delSetValue();
                         break;
                     case SETT:
                         this.setValueAndKeyInHashMap();
                         break;
                     case UPDT:
                         this.updateValueUsingKey();
+                        break;
+                    case SAVE:
+                        this.saveHashMap();
+                        break;
+                    case LOAD:
+                        this.retrieveHashMap();
                         break;
                     case EXIT:
                         this.isRunning = false;
@@ -76,11 +108,177 @@ public class ServerThread implements Runnable {
         }
     }
 
-    private void deleteKeyValue() {
+    private void decrValuebyKey() {
+        try{
+            String key,increment;
+            this.protocol.readSpace();
+            key = this.protocol.getValue();
+            this.protocol.readSpace();
+            increment=this.protocol.getValue();
+            if(exstInHashMap(key) && checkIfIsNumber(increment)) {
+
+                int res=Integer.parseInt((String) getInHashMap(key))-Integer.parseInt(increment);
+                setInHashMap(key,String.valueOf(res));
+
+                this.protocol.set(key,String.valueOf(res));
+
+            }
+            else{
+                this.protocol.error("Key not saved or value not number");
+            }
+        }catch (NumberFormatException e) {
+            this.protocol.error("The value is not numeric");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void incrValue() {
         try{
             String key;
             this.protocol.readSpace();
-            key = this.protocol.readSpace();
+            key = this.protocol.getValue();
+            if(exstInHashMap(key)) {
+                if (checkIfIsNumber((String) getInHashMap(key))) {
+                    int res = Integer.parseInt("1") + Integer.parseInt((String) getInHashMap(key));
+
+                    System.out.println(res);
+                    setInHashMap(key, String.valueOf(res));
+
+                    this.protocol.set(key, String.valueOf(res));
+                }
+                else{
+                    this.protocol.error("value is not an integer.");
+                }
+
+            }
+            else{
+                this.protocol.error("The key is not saved in the Database");
+            }
+        }catch (NumberFormatException e) {
+            this.protocol.error("The value is not numeric");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private void incrValuebyKey() {
+        try{
+            String key,increment;
+            this.protocol.readSpace();
+            key = this.protocol.getValue();
+            this.protocol.readSpace();
+            increment=this.protocol.getValue();
+            if(exstInHashMap(key) && checkIfIsNumber(increment)) {
+
+                int res=Integer.parseInt(increment)+Integer.parseInt((String) getInHashMap(key));
+                setInHashMap(key,String.valueOf(res));
+
+                this.protocol.set(key,String.valueOf(res));
+
+            }
+            else{
+                this.protocol.error("key not saved or value not number");
+            }
+        }catch (NumberFormatException e) {
+            this.protocol.error("The value is not numeric");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private void decrKeyValue() {
+        try {
+            String key;
+            this.protocol.readSpace();
+            key = this.protocol.getValue();
+            if (exstInHashMap(key)) {
+                if (checkIfIsNumber((String) getInHashMap(key))) {
+                    int res = Integer.parseInt("-1") + Integer.parseInt((String) getInHashMap(key));
+
+                    System.out.println(res);
+                    setInHashMap(key, String.valueOf(res));
+
+                    this.protocol.set(key, String.valueOf(res));
+                } else {
+                    this.protocol.error("value is not an integer.");
+                }
+
+            } else {
+                this.protocol.error("The key is not saved in the Database");
+            }
+        } catch (NumberFormatException e) {
+            this.protocol.error("The value is not numeric");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void setAddValue() throws IOException {
+        try{
+            String key, value;
+            this.protocol.readSpace();
+            key = this.protocol.getValue();
+            this.protocol.readSpace();
+            value = this.protocol.getValue();
+            if(exstInHashMap(key)) {
+                if(getInHashMap(key) instanceof ArrayList){
+                    ArrayList<String> list = (ArrayList<String>) getInHashMap(key);
+                    if(!list.contains(value)){
+                        list.add(value);
+                        setInHashMap(key,list);
+                        this.protocol.setAdd(key, value);
+                    }
+                    else
+                       this.protocol.error("This value already exist");
+                }
+                else {
+                    this.protocol.error("This key is not set/list");
+                }
+            }
+            else{
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(value);
+                setInHashMap(key,list);
+                this.protocol.setAdd(key, value);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void delSetValue() throws IOException {
+        try{
+            String key, value;
+            this.protocol.readSpace();
+            key = this.protocol.getValue();
+            this.protocol.readSpace();
+            value = this.protocol.getValue();
+            if(exstInHashMap(key)) {
+                if(getInHashMap(key) instanceof ArrayList){
+                    ArrayList<String> list = (ArrayList<String>) getInHashMap(key);
+                    if(list.contains(value)){
+                        list.remove(value);
+                        setInHashMap(key,list);
+                        this.protocol.setRem(key, value);
+                    }
+                    else
+                        this.protocol.error("This value is not exist");
+                }
+                else {
+                    this.protocol.error("This key is not set/list");
+                }
+            }
+            else{
+                this.protocol.error("This key set not exists");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteKeyValue() throws IOException {
+        try{
+            String key;
+            this.protocol.readSpace();
+            key = this.protocol.getValue();
             if(exstInHashMap(key)) {
                 deltInHashMap(key);
                 this.protocol.delete(key);
@@ -97,7 +295,7 @@ public class ServerThread implements Runnable {
         String key;
 
         this.protocol.readSpace();
-        key     = this.protocol.readSpace();
+        key     = this.protocol.getValue();
 
         try{
             String exists = "0";
@@ -114,15 +312,23 @@ public class ServerThread implements Runnable {
         String key, value;
 
         this.protocol.readSpace();
-        key = this.protocol.readSpace();
+        key = this.protocol.getValue();
 
         try{
             if(this.exstInHashMap(key)) {
-                value = getInHashMap(key);
-                this.protocol.get(key, value);
+                if(getInHashMap(key) instanceof String){
+                    value = (String) getInHashMap(key);
+                    this.protocol.get(key, value);
+                }
+                else if(getInHashMap(key) instanceof ArrayList){
+                    value = getInHashMap(key).toString();
+                    this.protocol.get(key, value);
+                }
+                else
+                    this.protocol.error("This key is not a valid data");
             }
             else{
-                this.protocol.error("ERROR 502: Unexpected command.Key not found. Try SETT "+key+" value");
+                this.protocol.error("502. Key not found.");
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -132,14 +338,13 @@ public class ServerThread implements Runnable {
     private void setValueAndKeyInHashMap() throws IOException{
         String key,value;
         try {
-
             this.protocol.readSpace();
-            key   = this.protocol.readSpace();
+            key = this.protocol.getValue();
             this.protocol.readSpace();
-            value     = this.protocol.getValue();
+            value = this.protocol.getValue();
 
             if(exstInHashMap(key)){
-                this.protocol.error("ERROR 502: Unexpected command.This key already exists. Try UPDT "+key+" "+value);
+                this.protocol.error("This key already exists.");
             }
             else{
                 setInHashMap(key, value);
@@ -154,16 +359,20 @@ public class ServerThread implements Runnable {
         String key, value;
         try{
             this.protocol.readSpace();
-            key     = this.protocol.readSpace();
+            key = this.protocol.getValue();
             this.protocol.readSpace();
-            value   = this.protocol.getValue();
+            value = this.protocol.getValue();
 
             if(exstInHashMap(key)) {
-                updtInHashMap(key, value);
-                this.protocol.update(key, value);
+                if(getInHashMap(key) instanceof String){
+                    updtInHashMap(key, value);
+                    this.protocol.update(key, value);
+                }
+                else
+                    this.protocol.error("This key is not a valid data");
             }
             else{
-                this.protocol.error("ERROR 502: Unexpected command.Key not found. Try SETT "+key+" "+value);
+                this.protocol.error("Key not found.");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -190,21 +399,25 @@ public class ServerThread implements Runnable {
             System.err.println("Can't read socketBuffer: " + ex.getMessage());
         }
     }
+
     private void deltInHashMap(String k){ this.map.remove(k); }
 
     private boolean exstInHashMap(String k){ return this.map.containsKey(k); }
 
-    private String getInHashMap(String k){ return this.map.get(k); }
+    private Object getInHashMap(String k){ return this.map.get(k); }
+    
 
-    private void setInHashMap(String k, String v){
+
+
+    private void setInHashMap(String k, Object v){
         this.map.put(k,v);
     }
 
-    private  void updtInHashMap(String k, String v){
+    private  void updtInHashMap(String k, Object v){
         this.map.replace(k,v);
     }
 
-    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST, EXIT,DEFA }
+    private enum State{ STRT, SETT, GETT, DELT, UPDT, EXST,LOAD,INCR, INBY,DEBY, DECR, SADD, SREM, SAVE, DEFA, EXIT }
 
     private void saveHashMap() {
         try {
@@ -245,6 +458,22 @@ public class ServerThread implements Runnable {
 
     }
 
+    private void counter(){
+        counter = (counter+1) % interval;
+        if (counter <= 0)
+            this.saveHashMap();
+    }
 
-
+    private boolean checkIfIsNumber(String num){
+        String c = "0123456789";
+        if (num.charAt(0) == '-'){
+            num = num.substring(1,num.length());
+        }
+        for(int i=0;i<num.length();i++){
+            if (!c.contains(String.valueOf(num.charAt(i)))){
+                return false;
+            }
+        }
+        return true;
+    }
 }

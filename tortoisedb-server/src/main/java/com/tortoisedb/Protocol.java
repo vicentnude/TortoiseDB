@@ -39,6 +39,7 @@ public class Protocol {
         }
     }
 
+
     public void set(String key,String value) {
         try {
             socketBuffer.write_command("ACKN");
@@ -55,6 +56,53 @@ public class Protocol {
             socketBuffer.write_space();
             socketBuffer.write_string("key:"+key+" value:"+value);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void increment(String key,String value) {
+        try {
+            socketBuffer.write_command("RETN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("key:"+key+" value:"+value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void incrementBy(String key,String value) {
+        try {
+            socketBuffer.write_command("RETN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("key:"+key+" value:"+value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void decrement(String key,String value) {
+        try {
+            socketBuffer.write_command("RETN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("key:"+key+" value:"+value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setAdd(String key, String value){
+        try{
+            socketBuffer.write_command("RETN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("key set:"+key+" value:"+value);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void setRem(String key, String value){
+        try{
+            socketBuffer.write_command("ACKN");
+            socketBuffer.write_space();
+            socketBuffer.write_string("Key set"+key+" value:"+value+" correctly deleted.");
+        } catch (IOException e){
             e.printStackTrace();
         }
     }
@@ -78,6 +126,7 @@ public class Protocol {
             e.printStackTrace();
         }
     }
+
 
     public void exist(String exists) {
         try {

@@ -8,7 +8,7 @@ import java.net.Socket;
 public class SocketBuffer {
 
 
-    private final int STRSIZE = 40;
+    private final int STRSIZE = 60;
 
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
