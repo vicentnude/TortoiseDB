@@ -352,10 +352,14 @@ public class InteractionLogicClient {
         System.out.print("removes the value from the list given by the key.\n\n");
 
         System.out.println("SAVE:  ");
-        System.out.print("saves the database to disk.");
+        System.out.print("saves the database to server.");
+
+        System.out.println("LOAD:  ");
+        System.out.print("load the database from server.");
 
         System.out.println("EXIT:  ");
-        System.out.print("closes the connection between the client and the server. End the client application.");
+        System.out.println("closes the connection between the client and the server. End the client application.");
+        System.out.println("");
 
     }
 
